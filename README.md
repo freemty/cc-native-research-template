@@ -1,18 +1,16 @@
 # cc-native-research-template
 
-> 在 agent 的时代，不断思考：任何 project 能不能通过 agent 实现更 meta 一级的迭代？
->
-> In the age of agents, keep asking: can this project go one meta-level higher with agents?
+**[English](README_EN.md)** | 中文
 
-## Why / 为什么
+> 在 agent 的时代，不断思考：任何 project 能不能通过 agent 实现更 meta 一级的迭代？
+
+## 为什么
 
 我们做了三个 agent 驱动的研究项目（fars-reviewer、PostTrainBench、hle-solver），发现每次都在重新搭同一套东西：实验目录怎么组织、prompt 怎么版本管理、论文怎么追踪、结果怎么分析、slides 怎么出、context 满了知识怎么不丢。
 
 这些项目的研究内容完全不同，但脚手架高度重复。所以我们把共性抽出来做成了这个模板。
 
-We built three agent-driven research projects and kept rebuilding the same scaffolding: experiment folders, prompt versioning, paper tracking, result analysis, slides generation, knowledge persistence across context windows. The research content differs; the infrastructure doesn't. So we extracted it.
-
-## What / 是什么
+## 是什么
 
 一个 GitHub template repo，给 Claude Code 研究项目提供完整的 harness：
 
@@ -26,8 +24,8 @@ We built three agent-driven research projects and kept rebuilding the same scaff
 
 ## Agents
 
-| Agent | Model | 做什么 |
-|-------|-------|--------|
+| Agent | 模型 | 做什么 |
+|-------|------|--------|
 | project-advisor | opus | 实验历史、研究发现、代码导航 |
 | cc-advisor | sonnet | Claude Code 工作流最佳实践 |
 | domain-expert | opus | 读论文、解释实验结果、维护文献地图 |
@@ -47,7 +45,7 @@ We built three agent-driven research projects and kept rebuilding the same scaff
 | `/weekly-progress` | 周五提醒 | CHANGELOG + git log → `docs/weekly/` |
 | `/commit-changelog` | 要提交了 | 标准化 commit + CHANGELOG |
 
-## Quick Start / 快速开始
+## 快速开始
 
 **1.** 在 GitHub 点 "Use this template" 创建你的 repo
 
@@ -74,7 +72,7 @@ python exp/exp01a/run.py --config exp/exp01a/config.yaml
 
 完整循环：`dev` → `/new-experiment` → 跑 → `/analyze-experiment` → commit → `/update-project-skill` → 下一轮。
 
-## Architecture / 架构
+## 架构
 
 ```
 your-project/
@@ -99,7 +97,7 @@ your-project/
 
 设计原则：agent 最小权限（4/7 只读）；hook 只提醒不拦截；重型输出丢给后台 agent；所有知识进 repo 不留在聊天记录里；先为 agent 可读性优化，再考虑人类审美。
 
-## Research Principles / 搜索原则
+## 搜索原则
 
 1. 先测量再动手，别凭直觉
 2. Baseline 不可动摇，每个结论都要有对照
@@ -108,7 +106,7 @@ your-project/
 5. 负面结论标 ❌，不重复尝试除非有新证据
 6. 实验前先写预测数值，跑完对照校准
 
-## Applying to Existing Repos / 迁移已有项目
+## 迁移已有项目
 
 已经有研究 repo 了？不用从头来。
 
@@ -125,13 +123,13 @@ cd your-repo && bash bootstrap.sh
 /update-project-skill
 ```
 
-## 这个模板的第一个用户
+## 第一个用户
 
 [PostTrainBench](https://github.com/freemty/PostTrainBench) — 一个迭代 auto post-training 的 agent。它跑实验、分析结果、读论文、更新自己的知识库、决定下一步试什么。
 
 这就是我们说的 scalable 自我觉察：agent 不只是执行你给的任务，它还维护着让自己随时间变聪明的那套基础设施。
 
-## References / 参考
+## 参考
 
 - [OpenAI — Harness Engineering](https://openai.com/zh-Hans-CN/index/harness-engineering/)
 - [Anthropic — Effective Context Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
