@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.3.0 — Plugin Architecture (2026-03-18)
+
+### Breaking Changes
+- Restructured as CC Plugin (no longer a GitHub template)
+- agents/, skills/, hooks/ moved to plugin top-level
+- scripts/, viewer/ moved to references/ (copied by /init-project)
+
+### Added
+- .claude-plugin/plugin.json — plugin manifest
+- hooks/hooks.json — hook definitions with ${CLAUDE_PLUGIN_ROOT} paths
+- /init-project skill — one-command project initialization
+- references/claude-md-template.md — CLAUDE.md generation template
+- references/gitignore-rules.md — .gitignore rules for research projects
+
+### Removed
+- bootstrap.sh — replaced by /init-project skill
+
 ## [0.3.0] - 2026-03-18
 
 ### Added
