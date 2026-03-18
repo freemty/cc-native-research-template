@@ -1,0 +1,8 @@
+{
+  "name": "cc-native-research-template",
+  "version": "0.3.0",
+  "description": "Research project lifecycle plugin for Claude Code",
+  "author": "freemty",
+  "license": "MIT",
+  "homepage": "https://github.com/freemty/cc-native-research-template"
+}

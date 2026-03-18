@@ -1,0 +1,23 @@
+{
+  "name": "cc-native-research-template",
+  "version": "0.3.0",
+  "description": "Research project lifecycle plugin — experiment scaffold, analysis, domain expertise, workflow enforcement",
+  "author": {
+    "name": "freemty",
+    "url": "https://github.com/freemty"
+  },
+  "homepage": "https://github.com/freemty/cc-native-research-template",
+  "repository": "https://github.com/freemty/cc-native-research-template",
+  "license": "MIT",
+  "keywords": ["research", "experiment", "claude-code", "agents", "skills"],
+  "agents": [
+    "./agents/project-advisor.md",
+    "./agents/cc-advisor.md",
+    "./agents/domain-expert.md",
+    "./agents/exp-manager.md",
+    "./agents/slides-maker.md",
+    "./agents/viz-frontend.md",
+    "./agents/template-presenter.md"
+  ],
+  "skills": ["./skills/"]
+}
