@@ -23,12 +23,13 @@
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| project-advisor | opus | Project knowledge — architecture, experiment history, navigation |
+| project-advisor | opus | Research project — experiment history, findings, codebase navigation |
 | cc-advisor | sonnet | Claude Code workflow best practices and tooling guidance |
 | domain-expert | opus | Domain research — reads papers, interprets experiment results |
-| slides-maker | sonnet | Generate analysis slides (writes to slides/) |
+| slides-maker | sonnet | Generate HTML slides — experiment analysis or project presentations |
 | exp-manager | sonnet | Experiment monitor — diagnose, retry, detect completion |
 | viz-frontend | sonnet | Build analysis dashboards (writes to viewer/) |
+| template-presenter | sonnet | Template meta — project overview, architecture docs, onboarding |
 
 ## Skills
 
@@ -37,6 +38,7 @@
 | update-project-skill | After major findings, before context compacts, or when stale (>24h) |
 | new-experiment | When starting a new experiment |
 | analyze-experiment | After experiment completes — runs analysis, domain interpretation, slides |
+| present-template | Generate template overview slides, onboarding docs, or demo scripts |
 
 ## Workflow
 

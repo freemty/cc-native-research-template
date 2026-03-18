@@ -37,8 +37,7 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/worktree-suggest.sh" },
-          { "type": "command", "command": "bash .claude/hooks/slides-guard.sh" }
+          { "type": "command", "command": "bash .claude/hooks/worktree-suggest.sh" }
         ]
       }
     ]

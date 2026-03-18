@@ -48,19 +48,18 @@ When this skill is invoked:
 6. **Spawn slides-maker subagent** (Agent tool, model: sonnet, write to slides/):
 
    Prompt:
-   > Generate analysis slides for experiment {current_exp}.
+   > mode: analysis
+   > exp_id: {current_exp}
    >
-   > Read: `exp/{current_exp}/results/summary.md` for data.
-   > Read: `exp/{current_exp}/README.md` for context and domain interpretation.
-   > Read existing files in `slides/` for style reference (if any exist).
+   > Read slides/references/agent-slides.md for analysis slide structure template.
+   > Read slides/references/frontend-slides.md for visual spec.
+   > Read exp/{current_exp}/results/summary.md for quantitative data.
+   > Read exp/{current_exp}/README.md for context and domain interpretation.
+   > Check slides/ for existing style reference.
    >
-   > Use /frontend-slides to create: `slides/{current_exp}-analysis.html`
-   >
-   > Include slides for:
-   > - Experiment overview and motivation
-   > - Key metrics and results table
-   > - Domain interpretation highlights
-   > - Next steps and follow-up experiments
+   > Generate: slides/{current_exp}-analysis.html
+   > Follow viewport fitting rules strictly. Single self-contained HTML file.
+   > Use clamp() for responsive font sizes. GitHub Dark theme.
 
 7. **Advance pipeline state:**
    - Set `stage` to "analysis" in `.pipeline-state.json`
