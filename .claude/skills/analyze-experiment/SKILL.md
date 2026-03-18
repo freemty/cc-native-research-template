@@ -45,9 +45,12 @@ When this skill is invoked:
 
 5. **Update `exp/summary.md`** cross-experiment table: update the row for current_exp with status "Analyzed" and key finding summary (one line).
 
-6. **Spawn slides-maker subagent** (Agent tool, model: sonnet, write to slides/):
+6. **Spawn slides-maker subagent** (Agent tool, model: sonnet, `run_in_background: true`):
 
-   Prompt:
+   First read `.claude/agents/slides-maker.md` to get the system prompt, then dispatch:
+
+   > {system prompt from slides-maker.md}
+   >
    > mode: analysis
    > exp_id: {current_exp}
    >
@@ -60,6 +63,8 @@ When this skill is invoked:
    > Generate: slides/{current_exp}-analysis.html
    > Follow viewport fitting rules strictly. Single self-contained HTML file.
    > Use clamp() for responsive font sizes. GitHub Dark theme.
+
+   Report to user: "slides-maker is generating slides/{current_exp}-analysis.html in the background."
 
 7. **Advance pipeline state:**
    - Set `stage` to "analysis" in `.pipeline-state.json`

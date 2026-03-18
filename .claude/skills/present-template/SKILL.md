@@ -6,6 +6,14 @@ description: "Generate template overview slides or documentation — orchestrate
 
 Generates presentations or documentation about the template itself. Orchestrates two subagents: template-presenter (read-only, generates content) and slides-maker (writes slides).
 
+## Subagent Dispatch Pattern
+
+Agent definitions live in `.claude/agents/`. When dispatching subagents via the Agent tool:
+- Use `model:` from the agent definition's frontmatter
+- Prefix the prompt with the agent's system prompt (body text from the .md file)
+- Use `run_in_background: true` for slides-maker (heavy HTML generation)
+- NOTE: `subagent_type` does not auto-discover `.claude/agents/` — use `general-purpose` and embed the system prompt manually
+
 ## Instructions
 
 When this skill is invoked:
@@ -37,8 +45,12 @@ When this skill is invoked:
    >
    > Format: {format based on output type}
 
-3. **If slides requested:** Spawn slides-maker subagent (Agent tool, model: sonnet, write slides/):
+3. **If slides requested:** Spawn slides-maker subagent (Agent tool, model: sonnet, `run_in_background: true`):
 
+   First read `.claude/agents/slides-maker.md` to get the system prompt, then dispatch:
+
+   > {system prompt from slides-maker.md}
+   >
    > mode: presentation
    > topic: {topic}
    >
@@ -50,6 +62,8 @@ When this skill is invoked:
    > Generate: slides/{topic}.html
    >
    > IMPORTANT: Follow viewport fitting strictly. Single self-contained HTML file.
+
+   Report to user: "slides-maker is generating slides/{topic}.html in the background. You'll be notified when it completes."
 
 4. **If docs requested:** Write the template-presenter's markdown output to `docs/{topic}.md`.
 
