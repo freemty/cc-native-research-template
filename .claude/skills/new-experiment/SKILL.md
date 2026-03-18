@@ -1,6 +1,6 @@
 ---
 name: new-experiment
-description: "Scaffold a new experiment directory with standard structure"
+description: "Use when starting a new experiment — scaffolds exp/{exp_id}/ directory with README, config, run.py, analyze.py, and results structure."
 disable-model-invocation: true
 ---
 

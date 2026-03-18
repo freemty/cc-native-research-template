@@ -1,5 +1,7 @@
 ---
-description: "Project knowledge base — auto-maintained by /update-project-skill"
+name: project-skill
+description: "Use when advising on project architecture, experiment history, codebase navigation, or research findings. Auto-maintained by /update-project-skill."
+user-invocable: false
 ---
 
 # cc-native-research-template — Project Knowledge

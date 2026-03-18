@@ -1,5 +1,6 @@
 ---
-description: "Generate template overview slides or documentation — orchestrates template-presenter and slides-maker"
+name: present-template
+description: "Use when creating project overview slides, architecture documentation, onboarding guides, or demo scripts for this template."
 disable-model-invocation: true
 ---
 

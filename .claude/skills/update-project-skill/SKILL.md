@@ -1,6 +1,6 @@
 ---
 name: update-project-skill
-description: "Regenerate project knowledge skill from current codebase state"
+description: "Use when project skill is stale (>24h), before context compacts, or after major findings — regenerates project-skill/SKILL.md from current codebase."
 disable-model-invocation: true
 ---
 

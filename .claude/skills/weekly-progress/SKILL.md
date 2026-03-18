@@ -1,6 +1,6 @@
 ---
 name: weekly-progress
-description: "Write weekly progress summary from CHANGELOG and experiment history into docs/weekly/"
+description: "Use when summarizing the week's work — gathers CHANGELOG entries, git log, and experiment status into docs/weekly/YYYY-WNN.md."
 disable-model-invocation: true
 ---
 

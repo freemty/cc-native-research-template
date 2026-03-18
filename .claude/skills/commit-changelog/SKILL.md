@@ -1,6 +1,6 @@
 ---
 name: commit-changelog
-description: "Standardized commit messages and changelog entries. Use when committing, updating CHANGELOG.md, or working with nested repos/submodules."
+description: "Use when creating git commits, updating CHANGELOG.md, or committing changes across nested repos/submodules."
 ---
 
 # Commit & Changelog
