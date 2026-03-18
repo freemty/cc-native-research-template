@@ -1,0 +1,19 @@
+# Experiment results (large, machine-generated)
+exp/*/results/*
+!exp/*/results/.gitkeep
+!exp/*/results/runs.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# OS
+.DS_Store
+
+# Viewer
+viewer/*.db
+
+# Superpowers brainstorm cache
+.superpowers/
