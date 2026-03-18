@@ -4,13 +4,15 @@
 # dev  = working instance (real content here)
 # ===========================================
 
+# Instance-specific: .claude/ configuration
+.claude/settings.local.json
+.claude/CHANGELOG-agents.md
+.claude/skills/project-skill/
+
 # Instance-specific: paper notes & landscape entries
 # (main keeps only landscape.md placeholder + .gitkeep)
 docs/papers/*.md
 !docs/papers/landscape.md
-
-# Instance-specific: accumulated project knowledge
-.claude/skills/project-skill/SKILL.md
 
 # Instance-specific: pipeline runtime state
 .pipeline-state.json
@@ -35,9 +37,6 @@ __pycache__/
 
 # OS
 .DS_Store
-
-# Viewer
-viewer/*.db
 
 # Superpowers brainstorm cache
 .superpowers/
