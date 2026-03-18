@@ -1,6 +1,6 @@
-# cc-native-research-template
+# {PROJECT_NAME}
 
-> Claude Code native research project template — standardized agents, skills, hooks, and experiment lifecycle
+> {ONE_LINE_DESCRIPTION}
 
 ## Quick Commands
 
@@ -76,4 +76,4 @@ Pipeline state tracked in `.pipeline-state.json`. Hooks remind next action per s
 
 - **current_exp:** null
 - **stage:** dev
-- **skill_updated_at:** 2026-03-18
+- **skill_updated_at:** {SKILL_UPDATE_DATE}

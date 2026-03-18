@@ -4,9 +4,9 @@ description: "Use when advising on project architecture, experiment history, cod
 user-invocable: false
 ---
 
-# cc-native-research-template — Project Knowledge
+# {PROJECT_NAME} — Project Knowledge
 
-> Claude Code native research project template — standardized agents, skills, hooks, and experiment lifecycle
+> {ONE_LINE_DESCRIPTION}
 
 ## Project Overview
 (auto-generated after first /update-project-skill run)

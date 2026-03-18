@@ -1,9 +1,1 @@
 # Format: {timestamp} {label} {task_id} {result_path}
-# 2026-03-18T10:00:00 baseline task_000 results/000.json
-# 2026-03-18T10:05:00 baseline task_001 results/001.json
-# 2026-03-18T10:10:00 baseline task_002 results/002.json
-# 2026-03-18T10:15:00 baseline task_003 results/003.json
-# 2026-03-18T10:20:00 baseline task_004 results/004.json
-# 2026-03-18T11:00:00 improved task_000 results/improved_000.json
-# 2026-03-18T11:05:00 improved task_001 results/improved_001.json
-# 2026-03-18T11:10:00 improved task_002 results/improved_002.json
