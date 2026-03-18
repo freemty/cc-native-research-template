@@ -7,37 +7,71 @@
       "Bash(grep:*)",
       "Bash(find:*)",
       "Bash(ps:*)",
-      "Bash(kill:*)"
+      "Bash(kill:*)",
+      "Bash(gh repo:*)",
+      "WebFetch(domain:openai.com)",
+      "WebFetch(domain:www.anthropic.com)",
+      "Bash(xreach tweet:*)",
+      "Bash(gh api:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:webcache.googleusercontent.com)",
+      "WebFetch(domain:archive.ph)",
+      "Bash(xreach thread:*)",
+      "WebFetch(domain:r.jina.ai)",
+      "Bash(git add:*)"
     ]
   },
   "hooks": {
     "PreCompact": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "bash .claude/hooks/pre-compact-remind.sh" }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-compact-remind.sh"
+          }
+        ]
       }
     ],
     "Stop": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "bash .claude/hooks/stop-check-workflow.sh" }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop-check-workflow.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Bash",
-        "hooks": [{ "type": "command", "command": "bash .claude/hooks/post-commit-changelog.sh" }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-commit-changelog.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
       {
         "matcher": "Write",
-        "hooks": [{ "type": "command", "command": "bash .claude/hooks/brainstorm-remind.sh" }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/brainstorm-remind.sh"
+          }
+        ]
       },
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/worktree-suggest.sh" }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/worktree-suggest.sh"
+          }
         ]
       }
     ]
