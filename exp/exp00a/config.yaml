@@ -1,0 +1,17 @@
+# Experiment configuration
+experiment:
+  name: exp00a
+  description: "Example experiment template"
+
+# Model/method settings
+model:
+  name: "{MODEL_NAME}"
+
+# Evaluation settings
+eval:
+  metrics: ["accuracy"]
+
+# Execution settings
+execution:
+  num_runs: 1
+  stagger_seconds: 0
