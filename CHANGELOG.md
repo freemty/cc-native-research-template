@@ -17,7 +17,7 @@
 ### Removed
 - bootstrap.sh — replaced by /init-project skill
 
-## [0.3.0] - 2026-03-18
+## [0.2.5] - 2026-03-18
 
 ### Added
 - CLAUDE.md: 6 Research Principles (measure first, baseline sacred, ablation-driven, etc.)
@@ -27,22 +27,13 @@
 - /commit-changelog skill (internalized from global)
 
 ### Changed
-- All 7 agents deepened with detailed prompts (total: 89-269w → 453-1609w):
-  - cc-advisor: decision framework + 9-source knowledge base + OpenAI Harness Engineering
-  - project-advisor: 4 question-type routing + 7 data source priority table
-  - domain-expert: 3 modes (paper archival + analysis + design advisor) + landscape.md + Write access
-  - exp-manager: full check cycle + bash commands + status report template
-  - slides-maker: slide structure template + content density rules + CSS components
-  - viz-frontend: API design + 4 visualization types + frontend patterns
-  - template-presenter: 4 output templates with data collection workflows
-- All 7 skills standardized per CC official spec (frontmatter: name, description starts with "Use when...")
-- All 7 agents standardized per CC subagent spec (tools comma-separated, description with triggers)
-- update-project-skill: added bootstrap mode for existing repo cold-start
+- All 7 agents deepened with detailed prompts (total: 89-269w → 453-1609w)
+- All 7 skills standardized per CC official spec
+- All 7 agents standardized per CC subagent spec
 - Hooks: jq-based JSON stdin parsing per CC hook protocol
 
 ### Removed
 - slides-guard hook (no longer needed after visual references internalized)
-- Everything Claude Code source from cc-advisor (replaced by OpenAI Harness Engineering)
 
 ## [0.2.0] - 2026-03-18
 
