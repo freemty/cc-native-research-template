@@ -15,13 +15,17 @@ LabMate fixes both sides. Your agent gets persistent experiment context, domain 
 ## Install
 
 ```bash
-claude plugin install freemty/labmate
+# Add marketplace
+/plugin marketplace add freemty/labmate-marketplace
+
+# Install (user scope, works across all projects)
+/plugin install labmate@labmate-marketplace
 ```
 
 ## Quick start
 
-1. Run `/init-project` in your existing project
-2. Answer 4 questions (name, description, domain, compute)
+1. Run `/labmate:init-project` in your existing project
+2. LabMate auto-detects project name, description, domain. Confirm or edit.
 3. Start researching. Your agent now knows the workflow.
 
 See [Tutorial: your first experiment](docs/tutorial.md) for a full walkthrough.
@@ -36,12 +40,12 @@ See [Tutorial: your first experiment](docs/tutorial.md) for a full walkthrough.
 - `@slides-maker` turns analysis into presentation-ready HTML slides
 - plus `@cc-advisor`, `@viz-frontend`, `@template-presenter`
 
-7 skills as slash commands:
+7 skills (plugin skills use the `labmate:` prefix):
 
-- `/new-experiment` scaffolds with config, README, run script, analysis script
-- `/analyze-experiment` does domain interpretation, cross-experiment comparison, slides
-- `/update-project-skill` compresses findings into persistent project memory
-- plus `/init-project`, `/present-template`, `/weekly-progress`, `/commit-changelog`
+- `/labmate:new-experiment` scaffolds with config, README, run script, analysis script
+- `/labmate:analyze-experiment` does domain interpretation, cross-experiment comparison, slides
+- `/labmate:update-project-skill` compresses findings into persistent project memory
+- plus `/labmate:init-project`, `/labmate:present-template`, `/labmate:weekly-progress`, `/labmate:commit-changelog`
 
 6 hooks that run automatically:
 
@@ -52,8 +56,8 @@ See [Tutorial: your first experiment](docs/tutorial.md) for a full walkthrough.
 ## Workflow
 
 ```
-/init-project → /new-experiment → run → /analyze-experiment
-  → commit findings → /update-project-skill → repeat
+/labmate:init-project → /labmate:new-experiment → run → /labmate:analyze-experiment
+  → commit findings → /labmate:update-project-skill → repeat
 ```
 
 Pipeline state lives in `.pipeline-state.json`. Your agent picks up where you left off.
@@ -68,7 +72,7 @@ mkdir -p .claude/agents
 # your local version automatically overrides the plugin
 ```
 
-Agents, skills, and hooks are all overridable. See the [design spec](docs/specs/2026-03-18-inject-template-design.md) for details.
+Agents, skills, and hooks are all overridable.
 
 ## Roadmap
 
