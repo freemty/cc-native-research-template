@@ -6,9 +6,9 @@ tools: [Read, Write, Edit, Bash, Glob, Grep]
 
 # Init Project
 
-在用户的现有项目中初始化研究项目骨架。**幂等**：可安全重复运行，已存在的文件/目录一律跳过，不会覆盖或删除。
+Initialize a research project skeleton in the user's existing project. **Idempotent**: safe to run multiple times — existing files/directories are skipped, never overwritten or deleted.
 
-所有输出和提示均使用**中文**。
+**Language**: Default to English for all output. If user responds in Chinese, switch to Chinese for the rest of the session.
 
 ---
 
@@ -35,22 +35,24 @@ tools: [Read, Write, Edit, Bash, Glob, Grep]
 
 ### Step 2: 收集项目信息
 
-**逐一提问**，每问完一个等待用户回答后再问下一个：
+**全部自动推断，用户只需确认或修改。**
 
-1. **项目名称**（Project name）
-   > "请输入项目名称（例如：my-nlp-research）："
+1. 用 Bash 获取 `basename $(pwd)` 作为 `{project-name}`
+2. 用 Bash 获取 `{compute_env}` 默认 `local`
+3. 浏览项目现有文件（README、代码、目录名等），推断出：
+   - `{description}` — 一句话描述（从 README 或目录结构推断）
+   - `{domain}` — 研究领域（从代码、依赖、README 关键词推断）
+4. 一次性展示给用户确认：
 
-2. **一句话描述**（One-line description）
-   > "请输入项目一句话描述（例如：研究大语言模型在低资源场景下的推理能力）："
+   > 自动检测到以下信息：
+   > - 项目名称：`fars-autotrain`
+   > - 描述：`Auto post-training benchmark agent`
+   > - 领域：`NLP / Post-training`
+   > - 计算环境：`local`
+   >
+   > 需要修改哪项？（直接回车 = 全部确认）
 
-3. **研究领域**（Research domain）
-   > "请输入研究领域（例如：NLP / computer vision / reinforcement learning）："
-
-4. **计算环境**（Compute environment）
-   > "请选择计算环境：local / remote-gpu / cloud（默认 local）："
-   - 若用户直接回车，默认 `local`
-
-将以上四个值保存为变量：`{project-name}`、`{description}`、`{domain}`、`{compute_env}`。
+5. 用户可以直接回车确认，或输入要改的内容（如 "描述改为 xxx"）
 
 ---
 
@@ -143,6 +145,45 @@ Cross-experiment flight recorder. One row per experiment.
 ```
 
 将四个占位符替换为 Step 2 收集的值。
+
+#### 3.6 project-skill 空模板
+
+若 `.claude/skills/project-skill/SKILL.md` 不存在，创建：
+
+```markdown
+---
+name: project-skill
+description: "Use when advising on project architecture, experiment history, codebase navigation, or research findings."
+user-invocable: false
+---
+
+# {project-name} — Project Knowledge
+
+> {description}
+
+## Project overview
+(run /labmate:update-project-skill to populate)
+
+## Experiment history
+(none yet)
+
+## Key findings
+(none yet)
+```
+
+将 `{project-name}` 和 `{description}` 替换为 Step 2 的值。确保 `.claude/skills/project-skill/` 目录存在。
+
+#### 3.7 CHANGELOG.md
+
+若 `CHANGELOG.md` 不存在，写入：
+
+```markdown
+# Changelog
+
+## Unreleased
+
+- Project initialized with LabMate
+```
 
 ---
 

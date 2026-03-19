@@ -2,78 +2,80 @@
 
 > {description}
 
-## Quick Commands
+## Quick commands
 
 | Command | Purpose |
 |---------|---------|
-| /init-project | Initialize research skeleton |
-| /new-experiment | Scaffold new experiment |
-| /analyze-experiment | Analyze results |
-| /update-project-skill | Refresh project knowledge |
+| /labmate:new-experiment | Scaffold new experiment |
+| /labmate:analyze-experiment | Analyze results |
+| /labmate:update-project-skill | Refresh project knowledge |
 | python scripts/launch_exp.py --exp <id> | Launch experiment |
 
-## Session Startup
+## Session startup
 
-| 要做什么 | 先读什么 |
-|---------|--------|
-| 了解当前进展 | .claude/skills/project-skill/SKILL.md |
-| 查阅领域文献 | docs/papers/landscape.md |
-| 运行实验 | exp/{current_exp}/README.md |
+| What to do | Read first |
+|-----------|-----------|
+| Catch up on progress | .claude/skills/project-skill/SKILL.md |
+| Check domain literature | docs/papers/landscape.md |
+| Run current experiment | exp/{current_exp}/README.md |
 
-## Project Knowledge
+## Project knowledge
 
-- **Primary skill hub:** .claude/skills/project-skill/SKILL.md
+- **Skill hub:** .claude/skills/project-skill/SKILL.md
 - **Experiment log:** exp/summary.md
 - **Domain papers:** docs/papers/
 
 ## Agents
 
-| Agent | Model | Purpose | Source |
-|-------|-------|---------|--------|
-| project-advisor | opus | 研究项目顾问 | plugin |
-| cc-advisor | sonnet | CC 最佳实践 | plugin |
-| domain-expert | opus | 领域研究专家 | plugin |
-| exp-manager | sonnet | 实验监控 | plugin |
-| slides-maker | sonnet | 幻灯片生成 | plugin |
-| viz-frontend | sonnet | 可视化仪表盘 | plugin |
-| template-presenter | sonnet | 模板介绍 | plugin |
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| @project-advisor | opus | Experiment history, findings, codebase navigation |
+| @cc-advisor | sonnet | Claude Code workflow best practices |
+| @domain-expert | opus | Reads papers, interprets experiment results |
+| @exp-manager | sonnet | Monitors experiments, diagnoses failures |
+| @slides-maker | sonnet | Generates HTML slides from analysis |
+| @viz-frontend | sonnet | Builds analysis dashboards |
+| @template-presenter | sonnet | Project overview and onboarding |
 
 ## Skills
 
-| Skill | Trigger | Source |
-|-------|---------|--------|
-| init-project | 初始化项目骨架 | plugin |
-| new-experiment | 开始新实验 | plugin |
-| analyze-experiment | 实验完成后分析 | plugin |
-| update-project-skill | 更新项目知识 | plugin |
-| present-template | 生成模板介绍 | plugin |
-| weekly-progress | 周报总结 | plugin |
-| commit-changelog | 提交 + CHANGELOG | plugin |
+All plugin skills use the `labmate:` prefix.
+
+| Skill | Trigger |
+|-------|---------|
+| /labmate:new-experiment | Starting a new experiment |
+| /labmate:analyze-experiment | After experiment completes |
+| /labmate:update-project-skill | After major findings or when stale |
+| /labmate:present-template | Generate overview slides |
+| /labmate:weekly-progress | Summarize week's progress |
+| /labmate:commit-changelog | Commit with CHANGELOG |
 
 ## Workflow
 
-dev -> /new-experiment -> run experiment -> /analyze-experiment
-  -> commit findings -> /update-project-skill -> repeat
+```
+/labmate:new-experiment → run → /labmate:analyze-experiment
+  → commit findings → /labmate:update-project-skill → repeat
+```
 
 Pipeline state tracked in .pipeline-state.json.
 
-## Research Principles
+## Research principles
 
-1. **Measure first** — 攻击实测最大瓶颈，不凭直觉
-2. **Baseline 不可侵犯** — 每个 claim 必须有可复现 baseline 对比
-3. **统计显著性** — 单次结果不下结论，关注方差
-4. **Ablation 驱动** — 多因素改动逐一隔离
-5. **尊重负面结论** — 方向不重复，除非有新证据
-6. **预测先行** — 实验前记录预期数值范围，实验后校准
+1. **Measure first** — attack the actual bottleneck, not your intuition
+2. **Baselines are sacred** — every claim needs a reproducible baseline comparison
+3. **Statistical rigor** — single-run results are anecdotal, track variance
+4. **Ablation-driven** — multi-factor changes require per-factor isolation
+5. **Respect negative results** — don't retry failed directions without new evidence
+6. **Predict first** — record expected numbers before running, calibrate after
 
 ## Conventions
 
-- **Exp naming:** exp{NN}{x} — number=major, letter=variant
-- **Prompt versioning:** prompts/{component}/_v{NN}.md — never overwrite
-- **CHANGELOG rule:** all iterating artifacts must have CHANGELOG entries
-- **Worktree rule:** destructive/exploratory changes use git worktree
+- **Exp naming:** exp{NN}{x} — number=major direction, letter=variant
+- **Prompt versioning:** prompts/{component}/_v{NN}.md — never overwrite, always increment
+- **CHANGELOG rule:** all iterating artifacts (prompts, skills, agents) must have CHANGELOG entries
+- **Worktree rule:** destructive or exploratory changes use git worktree
 
-## Current State
+## Current state
 
 - **current_exp:** null
 - **stage:** dev
