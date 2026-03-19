@@ -1,0 +1,34 @@
+#!/bin/bash
+# Hook: PostToolUse(Bash) — remind to run /analyze-experiment after analysis script completes
+
+INPUT=$(cat)
+
+# Guard: only act on python analyze commands that succeeded
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+if [ -z "$COMMAND" ]; then exit 0; fi
+
+# Match analyze.py or python.*analyze patterns
+if ! echo "$COMMAND" | grep -qE '(analyze\.py|python.*analyze)'; then exit 0; fi
+
+# Check exit code — only remind on success
+EXIT_CODE=$(echo "$INPUT" | jq -r '.tool_output.exit_code // "1"' 2>/dev/null)
+if [ "$EXIT_CODE" != "0" ]; then exit 0; fi
+
+# Check pipeline state — only relevant during experiment/monitoring stages
+STATE_FILE=".pipeline-state.json"
+if [ -f "$STATE_FILE" ]; then
+  STAGE=$(python3 -c "import json; print(json.load(open('$STATE_FILE')).get('stage', ''))" 2>/dev/null)
+  case "$STAGE" in
+    experiment|monitoring)
+      echo "Analysis script completed successfully. Run /labmate:analyze-experiment to process results and update findings."
+      ;;
+    analysis)
+      echo "Analysis script completed. Results already in analysis stage — consider /commit-changelog when done."
+      ;;
+    *)
+      echo "Analysis script completed. Consider running /labmate:analyze-experiment if this was an experiment run."
+      ;;
+  esac
+else
+  echo "Analysis script completed. Run /labmate:analyze-experiment to process results."
+fi

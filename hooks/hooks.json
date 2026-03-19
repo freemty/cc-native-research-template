@@ -22,6 +22,10 @@
       {
         "matcher": "Bash",
         "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/post-commit-changelog.sh\"", "async": false}]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/post-analyze-remind.sh\"", "async": false}]
       }
     ],
     "PreToolUse": [

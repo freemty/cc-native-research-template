@@ -53,13 +53,16 @@ Use the Agent tool to spawn an Opus subagent. Provide different prompts dependin
 
 **Common output format for both modes:**
 
-> Output: complete SKILL.md content with these sections:
-> - Project Overview & Current State (name, description, motivation, current stage)
-> - Architecture (code structure, data flow, key modules)
-> - Experiment History Table (exp → status → key finding)
-> - Key Pitfalls & Lessons Learned (APPEND-ONLY)
-> - Active Prompt Versions & Trade-offs
-> - Quick Reference (commands, paths, env vars)
+> Output: complete SKILL.md content with these sections (5-segment retrospective structure):
+> - **Project Overview & Current State** (name, description, motivation, current stage)
+> - **Architecture** (code structure, data flow, key modules)
+> - **System Cognition** (core understanding: what works, what doesn't, validated hypotheses, active assumptions)
+> - **Technical Archive** (key technical decisions, parameter choices, benchmark baselines, rejected alternatives with rationale)
+> - **Experiment History Table** (exp → status → prediction → actual → key finding — include prediction calibration column)
+> - **Prediction Calibration** (prediction vs actual meta-learning: systematic biases, calibration accuracy trends)
+> - **Engineering Lessons** (APPEND-ONLY — pitfalls, debugging insights, tooling gotchas, workflow improvements)
+> - **Active Prompt Versions & Trade-offs**
+> - **Quick Reference** (commands, paths, env vars)
 
 ### Step 2: Show diff to user
 
