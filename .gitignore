@@ -1,39 +1,9 @@
-# ===========================================
-# Template vs Instance boundary
-# main = template skeleton (placeholders only)
-# dev  = working instance (real content here)
-# ===========================================
-
-# Instance-specific: .claude/ configuration
-.claude/settings.local.json
-.claude/CHANGELOG-agents.md
-.claude/skills/project-skill/
-
-# Instance-specific: paper notes & landscape entries
-# (main keeps only landscape.md placeholder + .gitkeep)
-docs/papers/*.md
-!docs/papers/landscape.md
-
-# Instance-specific: pipeline runtime state
-.pipeline-state.json
-
-# Instance-specific: generated slides
-slides/*.html
-
-# Instance-specific: experiment plans & progress
-docs/plans/
-docs/weekly/
-
-# Experiment results (large, machine-generated)
-exp/*/results/*
-!exp/*/results/.gitkeep
-!exp/*/results/runs.log
-
 # Python
 __pycache__/
 *.pyc
 .venv/
 *.egg-info/
+.pytest_cache/
 
 # OS
 .DS_Store
