@@ -3,9 +3,6 @@
 docs/papers/*.md
 !docs/papers/landscape.md
 
-# Instance-specific: accumulated project knowledge
-.claude/skills/project-skill/SKILL.md
-
 # Instance-specific: pipeline runtime state
 .pipeline-state.json
 

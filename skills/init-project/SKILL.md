@@ -27,6 +27,40 @@ Initialize a research project skeleton in the user's existing project. **Idempot
 
 ---
 
+### Step 1.5: Fuzzy match existing content
+
+Before creating new files, scan for existing content that serves the same purpose but in a different format or location.
+
+**What to scan for:**
+
+| Target | Look for |
+|--------|----------|
+| `exp/summary.md` | Markdown tables in README or other .md files with columns like Status/Finding/Result. Grep for `experiment`, `trial`, `run`, `baseline` near table syntax. |
+| `docs/papers/` | Existing dirs like `docs/notes/`, `docs/references/`, `references/`, `papers/`, `literature/` |
+| `docs/papers/landscape.md` | Any .md file with dense occurrences of `arxiv`, `paper`, `doi`, `citation`, or URL patterns to academic sites |
+| `exp/` | Existing dirs like `experiments/`, `exps/`, `runs/`, `trials/` |
+
+**How to scan:** Use Grep and Glob to quickly check. Don't read every file — just check filenames and grep for key patterns.
+
+**When a match is found, ask the user:**
+
+```
+Found existing content that may overlap:
+  → README.md lines 45-62: markdown table with experiment records
+
+  [migrate] Extract and convert to exp/summary.md format
+  [skip]    Create fresh exp/summary.md, keep README as-is
+  [keep]    Don't create exp/summary.md
+
+Choice:
+```
+
+If user picks **migrate**: parse the existing content, convert to labmate format, write to the target file. Do NOT delete or modify the original — user decides cleanup later.
+
+If no matches found, proceed silently.
+
+---
+
 ### Step 2: Collect project info
 
 **Auto-detect everything. User only confirms or edits.**
