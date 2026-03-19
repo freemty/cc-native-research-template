@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# SessionStart hook for cc-native-research-template plugin
+# Injects context based on project initialization state
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+# Detect project state
+if [ ! -f ".pipeline-state.json" ]; then
+    # Project not initialized — prompt to run /init-project
+    context="<research-template-plugin>\n\nThis project has not been initialized with the research template.\n\nRun \`/init-project\` to set up:\n- Experiment directory structure (exp/, docs/papers/, scripts/, viewer/)\n- CLAUDE.md with research principles, workflow, and agent/skill registry\n- .gitignore rules for instance-specific files\n- Pipeline state tracking\n\nThe plugin provides 7 agents (@domain-expert, @project-advisor, etc.) and 7 skills (/new-experiment, /analyze-experiment, etc.) — all available after initialization.\n\n</research-template-plugin>"
+else
+    # Project initialized — inject current state + workflow reminder
+    current_exp=$(python3 -c "import json; print(json.load(open('.pipeline-state.json')).get('current_exp', 'null'))" 2>/dev/null || echo "null")
+    stage=$(python3 -c "import json; print(json.load(open('.pipeline-state.json')).get('stage', 'dev'))" 2>/dev/null || echo "dev")
+
+    context="<research-template-plugin>\n\nResearch template active.\n- current_exp: ${current_exp}\n- stage: ${stage}\n\nWorkflow: /new-experiment -> run -> /analyze-experiment -> /update-project-skill -> repeat\n\nAvailable: @domain-expert @project-advisor @exp-manager @slides-maker | /new-experiment /analyze-experiment /update-project-skill /weekly-progress\n\nRead .claude/skills/project-skill/SKILL.md for accumulated project knowledge.\n\n</research-template-plugin>"
+fi
+
+escaped=$(escape_for_json "$context")
+
+# Output context injection
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+    printf '{\n  "additional_context": "%s"\n}\n' "$escaped"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$escaped"
+else
+    printf '{\n  "additional_context": "%s"\n}\n' "$escaped"
+fi
+
+exit 0
