@@ -25,6 +25,10 @@ LabMate fixes both sides. It gives your agent persistent experiment memory and d
 
 Then run `/init-project` in your existing research project. LabMate auto-detects your project and sets up the skeleton. Done.
 
+### Tutorial
+
+New to Claude Code for research? Start here: **[CC Research Playbook](https://freemty.github.io/cc-research-playbook.html)** — covers context engineering, skills, hooks, sub-agents, and how LabMate ties it all together.
+
 ### Recommended companions
 
 LabMate works on its own, but these plugins make it better:
