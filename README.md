@@ -1,5 +1,11 @@
 # LabMate
 
+![version](https://img.shields.io/badge/version-0.4.3-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+![agents](https://img.shields.io/badge/agents-7-orange)
+![skills](https://img.shields.io/badge/skills-7-orange)
+<!-- TODO: 30s demo GIF — record with VHS or asciinema -->
+
 Research Harness for Claude Code. Keep your agent grounded in context, not lost in vibe coding.
 
 [中文](README_ZH.md)
@@ -62,6 +68,17 @@ See [Tutorial: your first experiment](docs/tutorial.md) for a full walkthrough.
 
 Pipeline state lives in `.pipeline-state.json`. Your agent picks up where you left off.
 
+## How it compares
+
+| Feature | labmate | [K-Dense](https://github.com/K-Dense-AI/claude-scientific-skills) | [Orchestra](https://github.com/Orchestra-Research/AI-Research-SKILLs) | [ARIS](https://github.com/conglu1997/ARIS) |
+|---------|---------|---------|-----------|------|
+| Deep paper reading | Yes | No | No | No |
+| Experiment design | Yes | No | Partial | No |
+| Research memory/context | Yes | No | No | No |
+| ML experiment tracking | Yes | No | Yes | Yes |
+| Paper writing pipeline | Partial | No | Partial | Partial |
+| Cross-discipline support | Yes | Bio/Chem | ML/AI only | ML only |
+
 ## Customization
 
 Override anything by creating a local copy:
@@ -83,6 +100,18 @@ Next up: Auto Research Agent mode. Let your agent run the full hypothesis-to-ana
 - [superpowers](https://github.com/obra/superpowers) — skills framework, subagent-driven development, SessionStart hook pattern
 - [frontend-slides](https://github.com/zarazhangrui/frontend-slides) — slide generation for the slides-maker agent
 - [Agent-Reach](https://github.com/Panniantong/Agent-Reach) — multi-platform content fetching for the domain-expert agent
+
+## Citing
+
+```bibtex
+@software{labmate2026,
+  title   = {LabMate: Research Harness for Claude Code},
+  author  = {freemty},
+  year    = {2026},
+  version = {0.4.3},
+  url     = {https://github.com/freemty/labmate}
+}
+```
 
 ## License
 

@@ -2,40 +2,40 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|clear|compact",
+        "matcher": "",
         "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start", "async": false}]
       }
     ],
     "PreCompact": [
       {
         "matcher": "",
-        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/pre-compact-remind.sh\"", "async": false}]
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" pre-compact-remind", "async": false}]
       }
     ],
     "Stop": [
       {
         "matcher": "",
-        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/stop-check-workflow.sh\"", "async": false}]
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" stop-check-workflow", "async": false}]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Bash",
-        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/post-commit-changelog.sh\"", "async": false}]
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-commit-changelog", "async": false}]
       },
       {
         "matcher": "Bash",
-        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/post-analyze-remind.sh\"", "async": false}]
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-analyze-remind", "async": false}]
       }
     ],
     "PreToolUse": [
       {
         "matcher": "Write",
-        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/brainstorm-remind.sh\"", "async": false}]
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" brainstorm-remind", "async": false}]
       },
       {
         "matcher": "Bash",
-        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/worktree-suggest.sh\"", "async": false}]
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" worktree-suggest", "async": false}]
       }
     ]
   }
