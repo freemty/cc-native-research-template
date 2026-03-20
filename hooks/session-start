@@ -26,7 +26,53 @@ else
     current_exp=$(python3 -c "import json; print(json.load(open('.pipeline-state.json')).get('current_exp', 'null'))" 2>/dev/null || echo "null")
     stage=$(python3 -c "import json; print(json.load(open('.pipeline-state.json')).get('stage', 'dev'))" 2>/dev/null || echo "dev")
 
-    context="<labmate>\n\nLabMate active. exp: ${current_exp} | stage: ${stage}\n\nWorkflow: /new-experiment -> run -> /analyze-experiment -> /update-project-skill -> repeat\n\nAgents: @domain-expert @project-advisor @exp-manager @slides-maker\nSkills: /new-experiment /analyze-experiment /update-project-skill /weekly-progress\n\nProject knowledge: .claude/skills/project-skill/SKILL.md\n\n</labmate>"
+    context="<labmate>\n\nLabMate active. exp: ${current_exp} | stage: ${stage}\n\nWorkflow: /new-experiment -> /monitor -> /analyze-experiment -> /visualize -> /commit-changelog\n\nAgents: @domain-expert @project-advisor @exp-manager @slides-maker @viz-frontend\nSkills: /read-paper /survey-literature /new-experiment /analyze-experiment /visualize /monitor /commit-changelog /update-project-skill\n\nProject knowledge: .claude/skills/project-skill/SKILL.md\n\n</labmate>"
+fi
+
+# --- Periodic reminders (frequency-capped) ---
+if [ -f ".pipeline-state.json" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+  source "${SCRIPT_DIR}/hook-utils"
+
+  reminders=""
+
+  # Remind to read papers (7-day cap)
+  if [ "$(should_remind 'read_paper' 168)" = "yes" ]; then
+    days_since=$(python3 -c "
+import os, glob
+from datetime import datetime
+papers = glob.glob('docs/papers/*.md')
+papers = [p for p in papers if 'landscape' not in p]
+if not papers:
+    print('never')
+else:
+    latest = max(os.path.getmtime(p) for p in papers)
+    days = (datetime.now().timestamp() - latest) / 86400
+    print(int(days))
+" 2>/dev/null || echo "never")
+    if [ "$days_since" = "never" ]; then
+      reminders="${reminders}No papers in docs/papers/ yet. Try /read-paper to start building your literature base.\n"
+      mark_reminded "read_paper"
+    elif [ "$days_since" -gt 7 ] 2>/dev/null; then
+      reminders="${reminders}It's been ${days_since} days since your last paper note. Try /read-paper to stay current.\n"
+      mark_reminded "read_paper"
+    fi
+  fi
+
+  # Remind weekly progress (Friday+, 24h cap)
+  DOW=$(date +%u)
+  if [ "$DOW" -ge 5 ]; then
+    WEEK=$(date +%Y-W%V)
+    WEEKLY_FILE="docs/weekly/${WEEK}.md"
+    if [ ! -f "$WEEKLY_FILE" ] && [ "$(should_remind 'weekly' 24)" = "yes" ]; then
+      reminders="${reminders}No weekly progress for ${WEEK}. Run /commit-changelog --weekly to summarize this week.\n"
+      mark_reminded "weekly"
+    fi
+  fi
+
+  if [ -n "$reminders" ]; then
+    context="${context}\n---\nReminders:\n${reminders}"
+  fi
 fi
 
 escaped=$(escape_for_json "$context")
