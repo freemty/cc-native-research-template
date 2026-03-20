@@ -25,6 +25,23 @@ LabMate fixes both sides. It gives your agent persistent experiment memory and d
 
 Then run `/init-project` in your existing research project. LabMate auto-detects your project and sets up the skeleton. Done.
 
+### Recommended companions
+
+LabMate works on its own, but these plugins make it better:
+
+```bash
+# Development workflow (TDD, planning, code review, brainstorming)
+/plugin install superpowers
+
+# Better slides quality (visual spec for slide generation)
+/plugin install frontend-slides
+
+# Fetch Twitter/X, XiaoHongShu, Bilibili content for paper discovery
+/plugin install agent-reach
+```
+
+superpowers is strongly recommended — it powers the structured development workflow that keeps research projects from going off the rails.
+
 ## What can it do?
 
 ### Reading papers
