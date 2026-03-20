@@ -14,14 +14,13 @@
 | `/survey-literature` | Systematic literature survey |
 | `/visualize` | Build results dashboard for experiment |
 | `/monitor` | Check experiment status via exp-manager |
-| `/ask-project` | Query project history and findings |
 
 ## Plugin architecture
 
 | Component | Location | Auto-loaded |
 |-----------|----------|-------------|
-| Agents (7) | agents/ | Yes (plugin.json) |
-| Skills (12) | skills/ | Yes (plugin.json) |
+| Agents (5) | agents/ | Yes (plugin.json) |
+| Skills (9) | skills/ | Yes (plugin.json) |
 | Hooks (6) | hooks/ | Yes (hooks.json) |
 | References | references/ | No (used by init-project) |
 
@@ -30,12 +29,10 @@
 | Agent | Model | Purpose |
 |-------|-------|---------|
 | project-advisor | opus | Experiment history, findings, codebase navigation |
-| cc-advisor | sonnet | Claude Code workflow best practices |
-| domain-expert | opus | Reads papers, interprets experiment results |
+| domain-expert | opus | Reads papers, deep-dives methodology, surveys literature, interprets results |
 | exp-manager | sonnet | Monitors experiments, diagnoses failures |
-| slides-maker | sonnet | Generates HTML slides from analysis |
+| slides-maker | sonnet | Generates HTML slides — analysis, presentations, project overview |
 | viz-frontend | sonnet | Builds analysis dashboards |
-| template-presenter | sonnet | Project overview and onboarding |
 
 ## Skills
 
@@ -45,14 +42,11 @@
 | new-experiment | Starting a new experiment |
 | analyze-experiment | After experiment completes |
 | update-project-skill | After major findings or when stale |
-| present-template | Generate overview slides |
-| weekly-progress | Summarize week's progress |
-| commit-changelog | Commit with CHANGELOG |
+| commit-changelog | Commit with CHANGELOG + weekly progress |
 | read-paper | Deep-dive a single paper with Q&A |
 | survey-literature | Systematic literature survey |
-| visualize | Build results dashboard |
+| visualize | Results dashboard, comparison, or project overview |
 | monitor | Check experiment status |
-| ask-project | Query project history |
 
 ## How to test
 
