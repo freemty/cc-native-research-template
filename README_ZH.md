@@ -1,5 +1,11 @@
 # LabMate
 
+![version](https://img.shields.io/badge/version-0.4.3-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+![agents](https://img.shields.io/badge/agents-7-orange)
+![skills](https://img.shields.io/badge/skills-7-orange)
+<!-- TODO: 30s demo GIF — record with VHS or asciinema -->
+
 Claude Code 的研究工作台。让你的 agent 扎根在实验上下文里，别在 vibe coding 里迷路。
 
 [English](README.md)
@@ -62,6 +68,17 @@ LabMate 两边都管。agent 这边：持久化的实验上下文、领域论文
 
 Pipeline 状态记在 `.pipeline-state.json` 里。下次开 session，agent 从断点继续。
 
+## 横向对比
+
+| 功能 | labmate | [K-Dense](https://github.com/K-Dense-AI/claude-scientific-skills) | [Orchestra](https://github.com/Orchestra-Research/AI-Research-SKILLs) | [ARIS](https://github.com/conglu1997/ARIS) |
+|------|---------|---------|-----------|------|
+| 论文深度阅读 | Yes | No | No | No |
+| 实验设计 | Yes | No | Partial | No |
+| 研究记忆/上下文 | Yes | No | No | No |
+| ML 实验追踪 | Yes | No | Yes | Yes |
+| 论文写作 pipeline | Partial | No | Partial | Partial |
+| 跨学科支持 | Yes | 生物/化学 | 仅 ML/AI | 仅 ML |
+
 ## 定制
 
 在项目本地创建同名文件就能覆盖 plugin 默认：
@@ -84,6 +101,18 @@ Agent、skill、hook 都能覆盖。
 - [superpowers](https://github.com/obra/superpowers) — skills 框架、subagent-driven development、SessionStart hook 模式
 - [frontend-slides](https://github.com/zarazhangrui/frontend-slides) — slides-maker agent 的幻灯片生成能力
 - [Agent-Reach](https://github.com/Panniantong/Agent-Reach) — domain-expert agent 的多平台内容抓取能力
+
+## 引用
+
+```bibtex
+@software{labmate2026,
+  title   = {LabMate: Research Harness for Claude Code},
+  author  = {freemty},
+  year    = {2026},
+  version = {0.4.3},
+  url     = {https://github.com/freemty/labmate}
+}
+```
 
 ## License
 
