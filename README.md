@@ -1,12 +1,10 @@
 # LabMate
 
-![version](https://img.shields.io/badge/version-0.4.3-blue)
+![version](https://img.shields.io/badge/version-0.5.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
-![agents](https://img.shields.io/badge/agents-7-orange)
-![skills](https://img.shields.io/badge/skills-7-orange)
 <!-- TODO: 30s demo GIF — record with VHS or asciinema -->
 
-Research Harness for Claude Code. Keep your agent grounded in context, not lost in vibe coding.
+Your AI labmate for the full research lifecycle — from reading papers to running experiments to writing them up.
 
 [中文](README_ZH.md)
 
@@ -14,92 +12,120 @@ Research Harness for Claude Code. Keep your agent grounded in context, not lost 
 
 You start a research project with Claude. Three hours later you're debugging a CUDA kernel and have completely forgotten what hypothesis you were testing.
 
-Meanwhile your agent has no idea what you tried last week, can't read your reference papers, and treats every session like day one.
+Your agent is no better — doesn't know what you tried last week, can't read your reference papers, and treats every session like day one.
 
-LabMate fixes both sides. Your agent gets persistent experiment context, domain paper knowledge, and 7 specialized agents that each know their role. You get a research lifecycle that keeps hypotheses, baselines, and findings visible, even when you're deep in implementation.
+LabMate fixes both sides. It gives your agent persistent experiment memory and domain knowledge. It gives you a research flow that keeps hypotheses, baselines, and findings visible — even when you're deep in implementation.
 
 ## Install
 
 ```bash
-# Add marketplace
-/plugin marketplace add freemty/labmate-marketplace
-
-# Install (user scope, works across all projects)
-/plugin install labmate@labmate-marketplace
+# From the Anthropic plugin marketplace
+/plugin install labmate
 ```
 
-## Quick start
+Then run `/init-project` in your existing research project. LabMate auto-detects your project and sets up the skeleton. Done.
 
-1. Run `/labmate:init-project` in your existing project
-2. LabMate auto-detects project name, description, domain. Confirm or edit.
-3. Start researching. Your agent now knows the workflow.
+## What can it do?
 
-See [Tutorial: your first experiment](docs/tutorial.md) for a full walkthrough.
+### Reading papers
 
-## What's inside
-
-7 agents, each with a specific research role:
-
-- `@domain-expert` reads your papers, interprets results, connects findings to literature
-- `@project-advisor` knows your experiment history and guides next steps
-- `@exp-manager` monitors running experiments, diagnoses failures, detects completion
-- `@slides-maker` turns analysis into presentation-ready HTML slides
-- plus `@cc-advisor`, `@viz-frontend`, `@template-presenter`
-
-7 skills (plugin skills use the `labmate:` prefix):
-
-- `/labmate:new-experiment` scaffolds with config, README, run script, analysis script
-- `/labmate:analyze-experiment` does domain interpretation, cross-experiment comparison, slides
-- `/labmate:update-project-skill` compresses findings into persistent project memory
-- plus `/labmate:init-project`, `/labmate:present-template`, `/labmate:weekly-progress`, `/labmate:commit-changelog`
-
-6 hooks that run automatically:
-
-- SessionStart detects project state and injects context
-- PreCompact reminds to save progress before context compression
-- Stop checks workflow state at session end
-
-## Workflow
+Drop a link or PDF. LabMate breaks down the methodology, flags the assumptions, and connects it to your own work.
 
 ```
-/labmate:init-project → /labmate:new-experiment → run → /labmate:analyze-experiment
-  → commit findings → /labmate:update-project-skill → repeat
+/read-paper https://arxiv.org/abs/2401.04088
+```
+
+After the deep-dive, ask follow-up questions. Say "save" when done — it archives to your literature base automatically.
+
+Want a broader picture? Survey a whole topic:
+
+```
+/survey-literature attention sink mechanisms in Diffusion Transformers
+```
+
+### Running experiments
+
+Describe what you want to test. LabMate scaffolds the experiment directory, config, run script, and analysis script.
+
+```
+/new-experiment
+```
+
+After you start the run, check status anytime:
+
+```
+/monitor
+```
+
+LabMate diagnoses failures, retries crashed jobs, and tells you when it's done.
+
+### Analyzing results
+
+One command to get domain interpretation, literature comparison, and presentation slides:
+
+```
+/analyze-experiment
+```
+
+Then see the results as an interactive dashboard:
+
+```
+/visualize
+```
+
+### Staying organized
+
+LabMate remembers across sessions. Your experiment history, paper notes, and key findings persist. Every new session starts with context — your agent knows what stage you're at and what to do next.
+
+Commit your work with automatic CHANGELOG updates:
+
+```
+/commit-changelog
+```
+
+## You don't need to memorize commands
+
+LabMate tells you what to do next. After creating an experiment, it suggests `/monitor`. After analysis finishes, it suggests `/visualize`. On Fridays it reminds you to write your weekly summary. Just follow the prompts.
+
+## The full research lifecycle
+
+```
+/init-project → /new-experiment → /monitor → /analyze-experiment → /visualize → /commit-changelog → repeat
+    read papers anytime: /read-paper, /survey-literature
 ```
 
 Pipeline state lives in `.pipeline-state.json`. Your agent picks up where you left off.
 
 ## How it compares
 
-| Feature | labmate | [K-Dense](https://github.com/K-Dense-AI/claude-scientific-skills) | [Orchestra](https://github.com/Orchestra-Research/AI-Research-SKILLs) | [ARIS](https://github.com/conglu1997/ARIS) |
-|---------|---------|---------|-----------|------|
+| Capability | labmate | [K-Dense](https://github.com/K-Dense-AI/claude-scientific-skills) | [Orchestra](https://github.com/Orchestra-Research/AI-Research-SKILLs) | [ARIS](https://github.com/conglu1997/ARIS) |
+|------------|---------|---------|-----------|------|
 | Deep paper reading | Yes | No | No | No |
+| Literature survey | Yes | No | No | No |
 | Experiment design | Yes | No | Partial | No |
-| Research memory/context | Yes | No | No | No |
-| ML experiment tracking | Yes | No | Yes | Yes |
-| Paper writing pipeline | Partial | No | Partial | Partial |
-| Cross-discipline support | Yes | Bio/Chem | ML/AI only | ML only |
+| Research memory | Yes | No | No | No |
+| Experiment monitoring | Yes | No | No | Yes |
+| Results dashboard | Yes | No | No | No |
+| Cross-discipline | Yes | Bio/Chem | ML/AI only | ML only |
 
 ## Customization
 
-Override anything by creating a local copy:
+Override anything by creating a local copy in your project:
 
 ```bash
-# Example: customize domain-expert for your field
 mkdir -p .claude/agents
-# your local version automatically overrides the plugin
+# Your local .claude/agents/domain-expert.md overrides the plugin version
 ```
 
-Agents, skills, and hooks are all overridable.
+## Under the hood
 
-## Roadmap
-
-Next up: Auto Research Agent mode. Let your agent run the full hypothesis-to-analysis loop with minimal supervision.
+5 specialized agents, 9 skills, 8 hooks working together. See [CLAUDE.md](CLAUDE.md) for the technical architecture.
 
 ## Acknowledgments
 
-- [superpowers](https://github.com/obra/superpowers) — skills framework, subagent-driven development, SessionStart hook pattern
-- [frontend-slides](https://github.com/zarazhangrui/frontend-slides) — slide generation for the slides-maker agent
-- [Agent-Reach](https://github.com/Panniantong/Agent-Reach) — multi-platform content fetching for the domain-expert agent
+- [superpowers](https://github.com/obra/superpowers) — skills framework and development workflow
+- [frontend-slides](https://github.com/zarazhangrui/frontend-slides) — slide generation engine
+- [Agent-Reach](https://github.com/Panniantong/Agent-Reach) — multi-platform content fetching
 
 ## Citing
 
@@ -108,7 +134,7 @@ Next up: Auto Research Agent mode. Let your agent run the full hypothesis-to-ana
   title   = {LabMate: Research Harness for Claude Code},
   author  = {freemty},
   year    = {2026},
-  version = {0.4.3},
+  version = {0.5.0},
   url     = {https://github.com/freemty/labmate}
 }
 ```
