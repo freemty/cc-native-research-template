@@ -1,6 +1,6 @@
 ---
 name: commit-changelog
-description: "Use when creating git commits, updating CHANGELOG.md, or committing changes across nested repos/submodules."
+description: "Use when creating git commits, updating CHANGELOG.md, committing across nested repos/submodules, or generating weekly progress summaries."
 ---
 
 # Commit & Changelog
@@ -66,3 +66,39 @@ Breaking change: `feat!: <summary>`
 4. **Body = why**, not what (the diff shows what)
 5. **HEREDOC for multi-line** — ensures correct formatting
 6. **Co-Authored-By** — always include for AI-assisted commits
+
+## Weekly Progress Mode
+
+When invoked as `/commit-changelog --weekly` or when user asks for a weekly summary:
+
+1. **Determine week range:**
+   - Current ISO week number and date range (Monday-Sunday)
+   - Check if `docs/weekly/YYYY-WNN.md` already exists (append mode if so)
+
+2. **Gather data** from real files (never fabricate):
+   a. **CHANGELOG.md** — entries since last weekly (or all if first)
+   b. **git log** — `git log --oneline --since="last monday"` for commit history
+   c. **exp/summary.md** — experiment status changes
+   d. **exp/*/README.md** — any new findings sections populated
+   e. **.pipeline-state.json** — current stage and experiment
+
+3. **Write structured summary to `docs/weekly/YYYY-WNN.md`:**
+
+   ```markdown
+   # Weekly Progress — Week {NN} ({date_range})
+
+   ## Overview
+   One paragraph summarizing the week's main achievements.
+
+   ## Key Changes
+   (from CHANGELOG.md + git log, grouped by type: Features / Fixes / Docs)
+
+   ## Experiments
+   | Exp | Status | Change This Week |
+   |-----|--------|-----------------|
+
+   ## Next Week
+   (inferred from pipeline state + TODOs in exp READMEs)
+   ```
+
+4. **Prompt user:** "Review the weekly summary, then commit? (Y/n)"
