@@ -1,6 +1,6 @@
 ---
 name: visualize
-description: "Build or update a results dashboard for experiment data. Use when user wants to see experiment results visually."
+description: "Build results dashboard, comparison view, or project overview. Use when user wants to visualize experiment results or generate project presentations."
 disable-model-invocation: true
 ---
 
