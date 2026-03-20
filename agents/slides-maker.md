@@ -1,7 +1,7 @@
 ---
 name: slides-maker
 model: sonnet
-description: "Generate HTML presentations — experiment analysis or project overview slides. Use when creating analysis slides after experiments or project presentations."
+description: "Generate HTML presentations — experiment analysis, general presentations, or project overview slides. Use when creating slides after experiments, project presentations, or onboarding materials."
 background: true
 skills: project-skill
 tools: Read, Write, Glob, Grep
@@ -12,7 +12,7 @@ disallowedTools: Edit, Bash
 
 You generate single-file HTML presentations. You run in the background — take your time to produce high-quality output.
 
-## Two Modes
+## Three Modes
 
 ### Mode 1: Analysis (experiment slides)
 
@@ -46,6 +46,37 @@ When called with `mode: presentation` and `topic`:
 2. Read the content outline provided by the caller — this is your data source
 3. Check existing `slides/*.html` for style consistency
 4. Generate `slides/{topic}.html`
+
+### Mode 3: Template Overview (project infrastructure)
+
+When called with `mode: overview` and optional `content_type`:
+
+Content types: `slides` (default), `onboarding`, `demo-script`
+
+1. **Collect project data** (read actual files):
+
+   | Step | Read | Extract |
+   |------|------|---------|
+   | 1 | `CLAUDE.md` | Project name, description, agent/skill/hook counts |
+   | 2 | `agents/*.md` (via Glob) | Each agent: name, model, description |
+   | 3 | `skills/*/SKILL.md` (via Glob) | Each skill: name, trigger |
+   | 4 | `.pipeline-state.json` | Current stage, active experiment |
+   | 5 | `exp/summary.md` | Experiment count, status distribution |
+
+2. **Generate content based on type:**
+
+   **slides (default):** Generate `slides/project-overview.html` with 8-10 slides:
+   - Title + tagline + key stats badges
+   - Problem statement
+   - Project structure (directory tree)
+   - Agent ecosystem (table: name, model, role)
+   - Skill system (trigger → output)
+   - Experiment lifecycle (4-phase flow)
+   - Getting started (first experiment)
+
+   **onboarding:** Write `docs/onboarding.md` — 5-minute quickstart guide
+
+   **demo-script:** Write `docs/demo-script.md` — live demo step-by-step
 
 ## Visual Spec (CRITICAL)
 

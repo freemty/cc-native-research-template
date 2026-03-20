@@ -14,10 +14,11 @@ When this skill is invoked with optional `<argument>`:
 
 ### Step 1: Determine target
 
+- If argument is `overview` → project overview mode (delegates to @slides-maker Mode 3)
 - If argument is `compare` → comparison mode (cross-experiment)
 - If argument is an exp ID (e.g., `exp01a`) → that experiment
 - If no argument → read `.pipeline-state.json` for `current_exp`
-- If `current_exp` is null and no argument → ask user which experiment
+- If `current_exp` is null and no argument → ask user which experiment or overview
 
 ### Step 2: Gather data
 
@@ -42,6 +43,12 @@ For compare mode:
 > Build a cross-experiment comparison dashboard.
 > Summary data: {exp/summary.md content}
 > Viewer directory: `viewer/`
+
+For overview mode:
+- Ask user what type: "slides" (default), "onboarding", or "demo-script"
+- Delegate to @slides-maker:
+  > mode: overview
+  > content_type: {user's choice}
 
 ### Step 4: Report
 
