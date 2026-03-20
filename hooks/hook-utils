@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Shared helper functions for LabMate hooks
+# Source this file: source "${SCRIPT_DIR}/hook-utils"
+
+should_remind() {
+  local key="$1"
+  local hours="${2:-24}"
+  local state_file=".labmate-hook-state.json"
+  if [ ! -f "$state_file" ]; then echo "yes"; return; fi
+  local result=$(python3 -c "
+import json
+from datetime import datetime, timedelta
+s = json.load(open('$state_file'))
+last = s.get('$key', '2000-01-01T00:00:00')
+if datetime.fromisoformat(last) < datetime.now() - timedelta(hours=$hours):
+    print('yes')
+else:
+    print('no')
+" 2>/dev/null || echo "yes")
+  echo "$result"
+}
+
+mark_reminded() {
+  local key="$1"
+  local state_file=".labmate-hook-state.json"
+  python3 -c "
+import json
+from datetime import datetime
+f = '$state_file'
+try:
+    s = json.load(open(f))
+except:
+    s = {}
+s['$key'] = datetime.now().isoformat()
+json.dump(s, open(f, 'w'), indent=2)
+" 2>/dev/null
+}

@@ -21,7 +21,7 @@
 |-----------|----------|-------------|
 | Agents (5) | agents/ | Yes (plugin.json) |
 | Skills (9) | skills/ | Yes (plugin.json) |
-| Hooks (6) | hooks/ | Yes (hooks.json) |
+| Hooks (8) | hooks/ | Yes (hooks.json) |
 | References | references/ | No (used by init-project) |
 
 ## Agents

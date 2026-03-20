@@ -26,6 +26,14 @@
       {
         "matcher": "Bash",
         "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-analyze-remind", "async": false}]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-new-experiment-monitor", "async": false}]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-read-paper-survey", "async": false}]
       }
     ],
     "PreToolUse": [

@@ -5,6 +5,7 @@ docs/papers/*.md
 
 # Instance-specific: pipeline runtime state
 .pipeline-state.json
+.labmate-hook-state.json
 
 # Instance-specific: generated slides
 slides/*.html

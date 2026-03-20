@@ -41,13 +41,3 @@ if [ -n "$HAS_PROMPTS" ] || [ -n "$HAS_SKILLS" ]; then
     echo "Warning: prompts/ or .claude/skills/ changed without CHANGELOG entry."
   fi
 fi
-
-# Weekly progress reminder (check if it's Friday or if no weekly for current week)
-WEEK=$(date +%Y-W%V)
-WEEKLY_FILE="docs/weekly/${WEEK}.md"
-if [ ! -f "$WEEKLY_FILE" ]; then
-  DOW=$(date +%u)  # 1=Mon, 5=Fri, 7=Sun
-  if [ "$DOW" -ge 5 ]; then
-    echo "No weekly progress for $WEEK yet. Consider running /weekly-progress."
-  fi
-fi

@@ -1,0 +1,14 @@
+#!/bin/bash
+# Hook: PostToolUse(Write) — suggest /survey-literature after paper deep-dive archival
+INPUT=$(cat)
+
+# Guard: only act on Write to docs/papers/*-deep-dive.md
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+if [ -z "$FILE_PATH" ]; then exit 0; fi
+
+if ! echo "$FILE_PATH" | grep -qE 'docs/papers/.*-deep-dive\.md$'; then exit 0; fi
+
+# Extract paper name from filename
+PAPER_NAME=$(basename "$FILE_PATH" | sed 's/-deep-dive\.md$//')
+
+echo "Paper archived: ${PAPER_NAME}. Want to find related work? Try /survey-literature"

@@ -20,15 +20,15 @@ if [ -f "$STATE_FILE" ]; then
   STAGE=$(python3 -c "import json; print(json.load(open('$STATE_FILE')).get('stage', ''))" 2>/dev/null)
   case "$STAGE" in
     experiment|monitoring)
-      echo "Analysis script completed successfully. Run /labmate:analyze-experiment to process results and update findings."
+      echo "Analysis script completed successfully. Run /analyze-experiment to process results and update findings."
       ;;
     analysis)
-      echo "Analysis script completed. Results already in analysis stage — consider /commit-changelog when done."
+      echo "Analysis complete. Run /visualize to see results as a dashboard, or /visualize compare for cross-experiment comparison."
       ;;
     *)
-      echo "Analysis script completed. Consider running /labmate:analyze-experiment if this was an experiment run."
+      echo "Analysis script completed. Consider running /analyze-experiment if this was an experiment run."
       ;;
   esac
 else
-  echo "Analysis script completed. Run /labmate:analyze-experiment to process results."
+  echo "Analysis script completed. Run /analyze-experiment to process results."
 fi

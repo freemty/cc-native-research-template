@@ -1,0 +1,15 @@
+#!/bin/bash
+# Hook: PostToolUse(Write) — remind to use /monitor after new experiment scaffolding
+INPUT=$(cat)
+
+# Guard: only act on Write to exp/*/README.md
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+if [ -z "$FILE_PATH" ]; then exit 0; fi
+
+# Match exp/{id}/README.md pattern
+if ! echo "$FILE_PATH" | grep -qE 'exp/[^/]+/README\.md$'; then exit 0; fi
+
+# Extract experiment ID from path
+EXP_ID=$(echo "$FILE_PATH" | sed -E 's|.*/exp/([^/]+)/README\.md$|\1|')
+
+echo "Experiment ${EXP_ID} scaffolded. After starting your run, use /monitor to check status."
