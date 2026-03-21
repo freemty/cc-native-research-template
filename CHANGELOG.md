@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### 新增
+- arxiv-detect hook: UserPromptSubmit 自动检测 arxiv 链接，提示使用 /read-paper
+
 ## v0.4.0 — LabMate (2026-03-19)
 
 ### Breaking Changes
