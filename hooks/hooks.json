@@ -1,5 +1,11 @@
 {
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" arxiv-detect", "async": false}]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "",
