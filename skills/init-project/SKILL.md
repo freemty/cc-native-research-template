@@ -102,11 +102,19 @@ Cross-experiment flight recorder. One row per experiment.
 
 将 `{domain}` 替换为 Step 2 收集的研究领域。
 
-#### 3.3 其他目录
+#### 3.3 Knowhow 目录
+
+以下目录若不存在则创建并写入 `.gitkeep`：
+- `docs/knowhow/infrastructure/`
+- `docs/knowhow/toolchain/`
+- `docs/knowhow/debug-solutions/`
+- `docs/knowhow/runbooks/`
+
+#### 3.4 其他目录
 
 - `slides/.gitkeep` — 若 `slides/` 不存在则创建
 
-#### 3.4 脚本文件
+#### 3.5 脚本文件
 
 **插件路径**：通过 `SKILL.md` 所在目录推导插件根目录。
 - 此 SKILL.md 位于 `<plugin_root>/skills/init-project/SKILL.md`
@@ -128,7 +136,7 @@ Cross-experiment flight recorder. One row per experiment.
 2. 若目标文件不存在，用 Write 写入
 3. 确保父目录存在（必要时用 Bash `mkdir -p` 创建）
 
-#### 3.5 pipeline 状态文件
+#### 3.6 pipeline 状态文件
 
 若 `.pipeline-state.json` 不存在，写入：
 
@@ -146,7 +154,7 @@ Cross-experiment flight recorder. One row per experiment.
 
 将四个占位符替换为 Step 2 收集的值。
 
-#### 3.6 project-skill 空模板
+#### 3.7 project-skill 空模板
 
 若 `.claude/skills/project-skill/SKILL.md` 不存在，创建：
 
@@ -173,7 +181,7 @@ user-invocable: false
 
 将 `{project-name}` 和 `{description}` 替换为 Step 2 的值。确保 `.claude/skills/project-skill/` 目录存在。
 
-#### 3.7 CHANGELOG.md
+#### 3.8 CHANGELOG.md
 
 若 `CHANGELOG.md` 不存在，写入：
 

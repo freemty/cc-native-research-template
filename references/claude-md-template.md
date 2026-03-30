@@ -25,6 +25,13 @@
 - **Experiment log:** exp/summary.md
 - **Domain papers:** docs/papers/
 
+## Knowhow
+
+- `docs/knowhow/infrastructure/` — Servers, networking, disk, GPU issues
+- `docs/knowhow/toolchain/` — CLI tools, docker, conda/pip, framework tips
+- `docs/knowhow/debug-solutions/` — Error investigation paths and fixes
+- `docs/knowhow/runbooks/` — Step-by-step operational procedures
+
 ## Agents
 
 | Agent | Model | Purpose |

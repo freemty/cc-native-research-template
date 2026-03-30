@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## v0.7.0 (2026-03-30)
+
+### 新增
+- /update-knowhow skill: 环境知识归档（infrastructure, toolchain, debug-solutions, runbooks）
+- post-knowhow-remind hook: 检测环境配置/debug 命令，提示归档（频率控制：5 分钟间隔，session 内最多 3 次）
+- init-project: 新增 `docs/knowhow/` 4 个子目录创建
+- CLAUDE.md 模板: 新增 Knowhow 索引 section
+
+### 变更
+- Plugin 组件数更新：9 → 10 skills, 8 → 9 hooks
+
 ## v0.6.0 (2026-03-26)
 
 ### 新增

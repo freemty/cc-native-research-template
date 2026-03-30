@@ -14,14 +14,15 @@
 | `/survey-literature` | Systematic literature survey |
 | `/visualize` | Build results dashboard for experiment |
 | `/monitor` | Check experiment status via exp-manager |
+| `/update-knowhow` | Archive environment knowledge to docs/knowhow/ |
 
 ## Plugin architecture
 
 | Component | Location | Auto-loaded |
 |-----------|----------|-------------|
 | Agents (5) | agents/ | Yes (plugin.json) |
-| Skills (9) | skills/ | Yes (plugin.json) |
-| Hooks (8) | hooks/ | Yes (hooks.json) |
+| Skills (10) | skills/ | Yes (plugin.json) |
+| Hooks (9) | hooks/ | Yes (hooks.json) |
 | References | references/ | No (used by init-project) |
 
 ## Agents
@@ -47,6 +48,7 @@
 | survey-literature | Systematic literature survey |
 | visualize | Results dashboard, comparison, or project overview |
 | monitor | Check experiment status |
+| update-knowhow | Archive env knowledge (infra, toolchain, debug, runbooks) |
 
 ## How to test
 
@@ -74,3 +76,4 @@
 - `docs/specs/2026-03-19-labmate-rename.md` — rename rationale
 - `docs/specs/2026-03-20-literature-skills-design.md` — /read-paper + /survey-literature design
 - `docs/specs/2026-03-20-convenience-skills-design.md` — /visualize + /monitor + /ask-project design
+- `docs/specs/2026-03-30-update-knowhow-design.md` — /update-knowhow environment knowledge archival
