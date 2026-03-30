@@ -1,0 +1,74 @@
+#!/bin/bash
+# Hook: PostToolUse(Bash) — remind to archive environment knowledge
+# Detects env-related commands (install, docker, ssh, debug errors) and suggests /update-knowhow
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/hook-utils"
+
+INPUT=$(cat)
+
+# Extract command and output
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+if [ -z "$COMMAND" ]; then exit 0; fi
+
+OUTPUT=$(echo "$INPUT" | jq -r '.tool_output.stdout // empty' 2>/dev/null)
+STDERR=$(echo "$INPUT" | jq -r '.tool_output.stderr // empty' 2>/dev/null)
+
+# Skip trivial commands
+if echo "$COMMAND" | grep -qE '^(ls|cat|head|tail|pwd|cd|echo|git (log|status|diff|branch|show)|wc|file|which|type) '; then
+  exit 0
+fi
+
+MATCHED=0
+
+# Signal 1: environment config commands
+if echo "$COMMAND" | grep -qiE '(apt(-get)? install|pip install|conda install|docker (build|run|pull|push|compose)|ssh |scp |rsync |mount |umount |systemctl |nvidia-smi|chmod |chown |curl -[oOL]|wget |export [A-Z]|source.*activate|nvm |pyenv |brew install)'; then
+  MATCHED=1
+fi
+
+# Signal 2: error keywords in output (suggests debug just happened)
+if [ "$MATCHED" -eq 0 ]; then
+  COMBINED="$OUTPUT $STDERR"
+  if echo "$COMBINED" | grep -qiE '(error|failed|permission denied|not found|no such file|connection refused|timeout|CUDA|OOM|out of memory|segfault|killed|errno)'; then
+    MATCHED=1
+  fi
+fi
+
+if [ "$MATCHED" -eq 0 ]; then exit 0; fi
+
+# Frequency control: max 3 per session, 5 min apart
+if [ "$(should_remind knowhow_remind 0.083)" != "yes" ]; then exit 0; fi
+
+# Session count: track in state file, cap at 3
+STATE_FILE=".labmate-hook-state.json"
+COUNT=$(python3 -c "
+import json
+try:
+    s = json.load(open('$STATE_FILE'))
+    print(s.get('knowhow_session_count', 0))
+except:
+    print(0)
+" 2>/dev/null || echo "0")
+
+if [ "$COUNT" -ge 3 ]; then exit 0; fi
+
+# Increment count and mark reminded
+python3 -c "
+import json
+from datetime import datetime
+f = '$STATE_FILE'
+try:
+    s = json.load(open(f))
+except:
+    s = {}
+s['knowhow_session_count'] = s.get('knowhow_session_count', 0) + 1
+s['knowhow_remind'] = datetime.now().isoformat()
+json.dump(s, open(f, 'w'), indent=2)
+" 2>/dev/null
+
+cat << 'HINT'
+<knowhow-hint>
+刚才的操作看起来包含值得记录的环境知识。
+要归档吗？说"记下来"或 /update-knowhow
+</knowhow-hint>
+HINT
