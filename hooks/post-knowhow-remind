@@ -7,15 +7,12 @@ source "${SCRIPT_DIR}/hook-utils"
 
 INPUT=$(cat)
 
-# Extract command and output
+# Extract command (cheap — single jq)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 if [ -z "$COMMAND" ]; then exit 0; fi
 
-OUTPUT=$(echo "$INPUT" | jq -r '.tool_output.stdout // empty' 2>/dev/null)
-STDERR=$(echo "$INPUT" | jq -r '.tool_output.stderr // empty' 2>/dev/null)
-
-# Skip trivial commands
-if echo "$COMMAND" | grep -qE '^(ls|cat|head|tail|pwd|cd|echo|git (log|status|diff|branch|show)|wc|file|which|type) '; then
+# Skip trivial commands early (before extracting output — saves 2x jq)
+if echo "$COMMAND" | grep -qE '^(ls|cat|head|tail|pwd|cd|echo|wc|file|which|type)( |$)|^git (log|status|diff|branch|show)( |$)'; then
   exit 0
 fi
 
@@ -26,34 +23,24 @@ if echo "$COMMAND" | grep -qiE '(apt(-get)? install|pip install|conda install|do
   MATCHED=1
 fi
 
-# Signal 2: error keywords in output (suggests debug just happened)
+# Signal 2: error keywords in output (only extract output if signal 1 didn't match)
 if [ "$MATCHED" -eq 0 ]; then
+  OUTPUT=$(echo "$INPUT" | jq -r '.tool_output.stdout // empty' 2>/dev/null)
+  STDERR=$(echo "$INPUT" | jq -r '.tool_output.stderr // empty' 2>/dev/null)
   COMBINED="$OUTPUT $STDERR"
-  if echo "$COMBINED" | grep -qiE '(error|failed|permission denied|not found|no such file|connection refused|timeout|CUDA|OOM|out of memory|segfault|killed|errno)'; then
+  if echo "$COMBINED" | grep -qiE '\b(error|failed|permission denied|not found|no such file|connection refused|timeout|OOM|out of memory|segfault|killed|errno)\b|CUDA error'; then
     MATCHED=1
   fi
 fi
 
 if [ "$MATCHED" -eq 0 ]; then exit 0; fi
 
-# Frequency control: max 3 per session, 5 min apart
+# Frequency control: 5 min apart
 if [ "$(should_remind knowhow_remind 0.083)" != "yes" ]; then exit 0; fi
 
-# Session count: track in state file, cap at 3
+# Session count check + increment + mark reminded (single python3 call)
 STATE_FILE=".labmate-hook-state.json"
-COUNT=$(python3 -c "
-import json
-try:
-    s = json.load(open('$STATE_FILE'))
-    print(s.get('knowhow_session_count', 0))
-except:
-    print(0)
-" 2>/dev/null || echo "0")
-
-if [ "$COUNT" -ge 3 ]; then exit 0; fi
-
-# Increment count and mark reminded
-python3 -c "
+ALLOWED=$(python3 -c "
 import json
 from datetime import datetime
 f = '$STATE_FILE'
@@ -61,10 +48,18 @@ try:
     s = json.load(open(f))
 except:
     s = {}
-s['knowhow_session_count'] = s.get('knowhow_session_count', 0) + 1
-s['knowhow_remind'] = datetime.now().isoformat()
-json.dump(s, open(f, 'w'), indent=2)
-" 2>/dev/null
+count = s.get('knowhow_session_count', 0)
+if count >= 3:
+    print('no')
+else:
+    s['knowhow_session_count'] = count + 1
+    json.dump(s, open(f, 'w'), indent=2)
+    print('yes')
+" 2>/dev/null || echo "yes")
+
+if [ "$ALLOWED" != "yes" ]; then exit 0; fi
+
+mark_reminded knowhow_remind
 
 cat << 'HINT'
 <knowhow-hint>
