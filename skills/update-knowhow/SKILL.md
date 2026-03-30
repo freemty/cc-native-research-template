@@ -1,58 +1,52 @@
 ---
 name: update-knowhow
-description: "Use when user says '记下来', '归档', 'save this', or after a knowhow-hint prompt. Archives environment knowledge into docs/knowhow/."
+description: "Use when user says '记下来', '归档', 'save this', or after a knowhow-hint prompt. Triggers on environment setup, debug resolution, infrastructure troubleshooting, or operational procedure discovery."
 disable-model-invocation: true
 ---
 
 # Update Knowhow
 
-Archive environment knowledge (infrastructure issues, toolchain tips, debug solutions, runbooks) into structured docs.
+Archive environment knowledge into structured `docs/knowhow/` directories. Dedup-first: update existing files before creating new ones. Auto-sync CLAUDE.md index.
 
-## Pre-check
+## Quick Reference
 
-1. Verify `docs/knowhow/` exists with 4 subdirectories:
-   - `docs/knowhow/infrastructure/`
-   - `docs/knowhow/toolchain/`
-   - `docs/knowhow/debug-solutions/`
-   - `docs/knowhow/runbooks/`
-
-   If missing, tell user: "docs/knowhow/ 不存在，请先运行 /init-project" and stop.
-
-## Execution
-
-### Step 1: Extract
-
-From the current conversation context, extract:
-- **Problem**: What went wrong or what needed to be set up
-- **Cause**: Root cause (if debug) or context (if setup)
-- **Solution**: Commands, config changes, or steps that resolved it
-- **Related commands**: Exact shell commands used
-
-### Step 2: Classify
-
-Determine which category this belongs to:
-
-| Category | Directory | When |
-|----------|-----------|------|
+| Category | Directory | Signals |
+|----------|-----------|---------|
 | Infrastructure | `docs/knowhow/infrastructure/` | Servers, SSH, networking, disk, GPU, cloud platforms |
 | Toolchain | `docs/knowhow/toolchain/` | CLI tools, docker, conda/pip, frameworks, build systems |
 | Debug Solutions | `docs/knowhow/debug-solutions/` | Error investigation paths + final fix |
 | Runbooks | `docs/knowhow/runbooks/` | Step-by-step procedures ("to do X on Y, first Z") |
 
-If unclear, ask user once: "这条记录属于哪个类别？infrastructure / toolchain / debug-solutions / runbooks"
+## Pre-check
+
+Verify `docs/knowhow/` exists with all 4 subdirectories. If missing: "docs/knowhow/ 不存在，请先运行 /init-project" — stop.
+
+## Execution
+
+### Step 1: Extract
+
+From conversation context, extract:
+- **Problem**: What went wrong or needed setup
+- **Cause**: Root cause (debug) or context (setup)
+- **Solution**: Commands, config changes, steps that resolved it
+- **Commands**: Exact shell commands used
+
+### Step 2: Classify
+
+Pick one category from Quick Reference. If unclear, ask user once.
 
 ### Step 3: Dedup Check
 
-1. Use Glob to list all `*.md` files in the target directory
-2. Use Grep to search for keywords from the extracted problem/solution across those files
-3. If a relevant file exists → **update that file** (append new section or revise existing content)
-4. If no match → **create new file** with kebab-case slug name (e.g., `docker-build-cache.md`)
+1. Glob `docs/knowhow/{category}/*.md`
+2. Grep keywords from extracted problem/solution across matches
+3. Match found → **update that file** (append or revise)
+4. No match → **create new file** with kebab-case slug (e.g., `docker-build-cache.md`)
 
 ### Step 4: Write
 
-**For new files**, use this template:
+New file template:
 
-```
+```markdown
 # {Title}
 
 > {One-line summary}
@@ -67,24 +61,23 @@ If unclear, ask user once: "这条记录属于哪个类别？infrastructure / to
 {Steps, commands, config changes}
 
 ## Commands
-\`\`\`bash
+```bash
 {Exact commands used}
-\`\`\`
+```
 
 ## Notes
 - Date: {YYYY-MM-DD}
 - Environment: {server/platform if relevant}
 ```
 
-**For existing files**, append a new `## ` section with date, or update the relevant section if the content overlaps.
+Existing file: append `## {Topic} ({date})` section, or update overlapping content in-place.
 
 ### Step 5: Index Sync
 
-1. Read `CLAUDE.md`
-2. Search for `docs/knowhow/` in its content
-3. If NOT found, append at the end:
+1. Read `CLAUDE.md`, search for `docs/knowhow/`
+2. If NOT found, append:
 
-```
+```markdown
 ## Knowhow
 - `docs/knowhow/infrastructure/` — Servers, networking, disk, GPU issues
 - `docs/knowhow/toolchain/` — CLI tools, docker, conda/pip, framework tips
@@ -92,20 +85,18 @@ If unclear, ask user once: "这条记录属于哪个类别？infrastructure / to
 - `docs/knowhow/runbooks/` — Step-by-step operational procedures
 ```
 
-4. If already found, skip (do not duplicate)
+3. If found, skip
 
 ### Step 6: Confirm
 
-Output a one-line summary:
 > 已归档到 `docs/knowhow/{category}/{slug}.md` — {one-line description}
 
-Or if updated:
-> 已更新 `docs/knowhow/{category}/{slug}.md` — {what was added}
+Or: 已更新 `docs/knowhow/{category}/{slug}.md` — {what was added}
 
-## Constraints
+## Common Mistakes
 
-- NEVER create files outside `docs/knowhow/`
-- NEVER create new subdirectories beyond the 4 fixed categories
-- Prefer updating existing files over creating new ones
-- Do NOT call subagents — all info is in current conversation context
-- CLAUDE.md index is directory-level (4 entries), not per-file
+- **创建新文件而非更新** — 永远先 dedup check，已有相关文件就更新
+- **在 docs/knowhow/ 之外创建文件** — 所有 knowhow 必须在 4 个固定目录内
+- **新建子目录** — 只有 4 个固定类别，不允许新增
+- **调用 subagent** — 所有信息都在当前对话上下文，直接执行
+- **逐文件索引 CLAUDE.md** — 索引粒度是目录级（4 条），不是文件级
