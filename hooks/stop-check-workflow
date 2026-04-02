@@ -30,8 +30,20 @@ case "$STAGE" in
     ;;
 esac
 
-# CHANGELOG compliance check
+# TODO.md staleness check
 CHANGED=$(git diff --name-only HEAD 2>/dev/null || true)
+if [ -f "TODO.md" ]; then
+  HAS_EXP=$(echo "$CHANGED" | grep "^exp/" || true)
+  HAS_PLAN=$(echo "$CHANGED" | grep -E "^docs/(superpowers/plans|specs)/" || true)
+  HAS_REFLECT=$(echo "$CHANGED" | grep "^reflect/" || true)
+  HAS_AGENTS=$(echo "$CHANGED" | grep "^agents/" || true)
+  TODO_CHANGED=$(echo "$CHANGED" | grep "^TODO.md" || true)
+  if [ -n "$HAS_EXP$HAS_PLAN$HAS_REFLECT$HAS_AGENTS" ] && [ -z "$TODO_CHANGED" ]; then
+    echo "Session produced experiment/plan/agent changes but TODO.md was not updated. Consider reviewing TODO.md."
+  fi
+fi
+
+# CHANGELOG compliance check
 HAS_PROMPTS=$(echo "$CHANGED" | grep "^prompts/" || true)
 HAS_SKILLS=$(echo "$CHANGED" | grep "^\.claude/skills/" || true)
 

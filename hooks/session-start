@@ -70,6 +70,19 @@ else:
     fi
   fi
 
+  # Remind about TODO.md (P0 items or staleness, 24h cap)
+  if [ -f "TODO.md" ] && [ "$(should_remind 'todo_check' 24)" = "yes" ]; then
+    TODO_P0=$(awk '/^## P0/,/^## P[1-9]/' TODO.md | grep -c '^\- \[ \]' || echo "0")
+    TODO_MTIME=$(python3 -c "import os,time; print(int((time.time()-os.path.getmtime('TODO.md'))/86400))" 2>/dev/null || echo "0")
+    if [ "$TODO_MTIME" -gt 7 ] 2>/dev/null; then
+      reminders="${reminders}TODO.md is ${TODO_MTIME} days stale. Review and update after this session.\n"
+      mark_reminded "todo_check"
+    elif [ "$TODO_P0" -gt 0 ] 2>/dev/null; then
+      reminders="${reminders}TODO.md has ${TODO_P0} open P0 items. See TODO.md for priorities.\n"
+      mark_reminded "todo_check"
+    fi
+  fi
+
   if [ -n "$reminders" ]; then
     context="${context}\n---\nReminders:\n${reminders}"
   fi
