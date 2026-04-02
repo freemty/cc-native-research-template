@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v0.7.1 (2026-04-02)
+
+### 新增
+- TODO.md integration: session-start hook 提醒 P0 数量/过期天数（24h 频率限制）
+- stop-check hook: 检测 exp/plan/agent 变更但 TODO.md 未更新，提醒用户
+- project-advisor: TODO.md 作为首要数据源，"what to try" 先查 P0 blocking items
+
 ## v0.7.0 (2026-03-30)
 
 ### 新增
