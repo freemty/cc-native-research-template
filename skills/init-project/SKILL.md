@@ -1,12 +1,12 @@
 ---
 name: init-project
-description: "Use when setting up a new research project or when .pipeline-state.json is missing."
+description: "Use when setting up a new project (general or research) or when .pipeline-state.json is missing."
 disable-model-invocation: true
 ---
 
 # Init Project
 
-Initialize a research project skeleton in the user's existing project. **Idempotent**: safe to run multiple times — existing files/directories are skipped, never overwritten or deleted.
+Initialize a project skeleton in the user's existing project. Supports two types: `general` (lightweight — knowhow, project-skill, changelog) and `research` (full — adds experiments, scripts, papers, slides). **Idempotent**: safe to run multiple times — existing files/directories are skipped, never overwritten or deleted.
 
 **Language**: Default to English for all output. If user responds in Chinese, switch to Chinese for the rest of the session.
 
@@ -54,55 +54,30 @@ Initialize a research project skeleton in the user's existing project. **Idempot
 
 5. 用户可以直接回车确认，或输入要改的内容（如 "描述改为 xxx"）
 
+6. 自动推断项目类型：
+   - 若项目已有 `exp/` 目录，或 README 中包含 experiment/benchmark/training 关键词 → 默认 `research`
+   - 否则默认 `general`
+   - 在确认信息中增加一行：
+     > - 项目类型：`general`（可选：research / general）
+
 ---
 
 ### Step 3: 创建目录结构
 
 **原则：只创建不存在的文件/目录。已存在则跳过并记录。**
 
+**插件路径**：通过 `SKILL.md` 所在目录推导插件根目录。
+- 此 SKILL.md 位于 `<plugin_root>/skills/init-project/SKILL.md`
+- 因此 `<plugin_root>` = SKILL.md 向上两级目录
+- 所有 references 文件读取自 `<plugin_root>/references/`
+
 按下列清单逐项处理：
 
-#### 3.1 实验目录
+---
 
-- `exp/.gitkeep` — 若 `exp/` 不存在则创建目录并写入空文件
-- `exp/summary.md` — 若不存在则写入以下内容：
+#### 通用部分（general + research 均执行）
 
-```markdown
-# Experiment Summary
-
-Cross-experiment flight recorder. One row per experiment.
-
-| Exp ID | Motivation | Status | Key Finding |
-|--------|-----------|--------|-------------|
-```
-
-#### 3.2 文档目录
-
-以下目录若不存在则创建并写入 `.gitkeep`：
-- `docs/papers/`
-- `docs/specs/`
-- `docs/weekly/`
-- `docs/archive/`
-
-- `docs/papers/landscape.md` — 若不存在则写入以下占位内容：
-
-```markdown
-# Domain Literature Landscape
-
-> Research domain: {domain}
-
-## Key Papers
-
-(待填写 — 使用 @domain-expert 协助整理文献)
-
-## Research Gaps
-
-(待填写)
-```
-
-将 `{domain}` 替换为 Step 2 收集的研究领域。
-
-#### 3.3 Knowhow 目录
+#### 3.1 Knowhow 目录
 
 以下目录若不存在则创建并写入 `.gitkeep`：
 - `docs/knowhow/infrastructure/`
@@ -110,38 +85,17 @@ Cross-experiment flight recorder. One row per experiment.
 - `docs/knowhow/debug-solutions/`
 - `docs/knowhow/runbooks/`
 
-#### 3.4 其他目录
+#### 3.2 文档目录（通用）
 
-- `slides/.gitkeep` — 若 `slides/` 不存在则创建
+- `docs/specs/.gitkeep` — 若 `docs/specs/` 不存在则创建
 
-#### 3.5 脚本文件
-
-**插件路径**：通过 `SKILL.md` 所在目录推导插件根目录。
-- 此 SKILL.md 位于 `<plugin_root>/skills/init-project/SKILL.md`
-- 因此 `<plugin_root>` = SKILL.md 向上两级目录
-- 所有 references 文件读取自 `<plugin_root>/references/`
-
-逐一处理（若目标文件已存在则跳过）：
-
-| 目标路径 | 来源（相对插件根） |
-|---------|----------------|
-| `scripts/launch_exp.py` | `references/launch_exp.py` |
-| `scripts/monitor_exp.sh` | `references/monitor_exp.sh` |
-| `scripts/download_results.sh` | `references/download_results.sh` |
-| `viewer/app.py` | `references/viewer-app.py` |
-| `viewer/static/index.html` | `references/viewer-static/index.html` |
-
-操作步骤：
-1. 用 Read 读取插件 references 中的源文件内容
-2. 若目标文件不存在，用 Write 写入
-3. 确保父目录存在（必要时用 Bash `mkdir -p` 创建）
-
-#### 3.6 pipeline 状态文件
+#### 3.3 pipeline 状态文件
 
 若 `.pipeline-state.json` 不存在，写入：
 
 ```json
 {
+  "type": "{type}",
   "project_name": "{project-name}",
   "description": "{description}",
   "domain": "{domain}",
@@ -152,9 +106,9 @@ Cross-experiment flight recorder. One row per experiment.
 }
 ```
 
-将四个占位符替换为 Step 2 收集的值。
+将占位符替换为 Step 2 收集的值。`{type}` 为 `general` 或 `research`。
 
-#### 3.7 project-skill 空模板
+#### 3.4 project-skill 空模板
 
 若 `.claude/skills/project-skill/SKILL.md` 不存在，创建：
 
@@ -181,7 +135,7 @@ user-invocable: false
 
 将 `{project-name}` 和 `{description}` 替换为 Step 2 的值。确保 `.claude/skills/project-skill/` 目录存在。
 
-#### 3.8 CHANGELOG.md
+#### 3.5 CHANGELOG.md
 
 若 `CHANGELOG.md` 不存在，写入：
 
@@ -195,11 +149,77 @@ user-invocable: false
 
 ---
 
+#### Research 专属部分（仅当 type=research 时执行，type=general 则跳过以下全部）
+
+#### 3.6 实验目录
+
+- `exp/.gitkeep` — 若 `exp/` 不存在则创建目录并写入空文件
+- `exp/summary.md` — 若不存在则写入以下内容：
+
+```markdown
+# Experiment Summary
+
+Cross-experiment flight recorder. One row per experiment.
+
+| Exp ID | Motivation | Status | Key Finding |
+|--------|-----------|--------|-------------|
+```
+
+#### 3.7 文档目录（research）
+
+以下目录若不存在则创建并写入 `.gitkeep`：
+- `docs/papers/`
+- `docs/weekly/`
+- `docs/archive/`
+
+- `docs/papers/landscape.md` — 若不存在则写入以下占位内容：
+
+```markdown
+# Domain Literature Landscape
+
+> Research domain: {domain}
+
+## Key Papers
+
+(待填写 — 使用 @domain-expert 协助整理文献)
+
+## Research Gaps
+
+(待填写)
+```
+
+将 `{domain}` 替换为 Step 2 收集的研究领域。
+
+#### 3.8 脚本文件
+
+逐一处理（若目标文件已存在则跳过）：
+
+| 目标路径 | 来源（相对插件根） |
+|---------|----------------|
+| `scripts/launch_exp.py` | `references/launch_exp.py` |
+| `scripts/monitor_exp.sh` | `references/monitor_exp.sh` |
+| `scripts/download_results.sh` | `references/download_results.sh` |
+| `viewer/app.py` | `references/viewer-app.py` |
+| `viewer/static/index.html` | `references/viewer-static/index.html` |
+
+操作步骤：
+1. 用 Read 读取插件 references 中的源文件内容
+2. 若目标文件不存在，用 Write 写入
+3. 确保父目录存在（必要时用 Bash `mkdir -p` 创建）
+
+#### 3.9 Slides
+
+- `slides/.gitkeep` — 若 `slides/` 不存在则创建
+
+---
+
 ### Step 4: 生成 CLAUDE.md
 
 **从插件读取模板：**
 
-1. 用 Read 读取 `<plugin_root>/references/claude-md-template.md`
+1. 根据项目类型选择模板：
+   - `general` → 用 Read 读取 `<plugin_root>/references/claude-md-template-general.md`
+   - `research` → 用 Read 读取 `<plugin_root>/references/claude-md-template-research.md`
 2. 替换以下占位符：
    - `{project-name}` → Step 2 的项目名称
    - `{description}` → Step 2 的一句话描述
@@ -222,13 +242,25 @@ user-invocable: false
 
 ### Step 5: 追加 .gitignore 规则
 
-1. 用 Read 读取 `<plugin_root>/references/gitignore-rules.md`
+1. 若 `.gitignore` 不存在，先用 Write 创建空文件（内容为空字符串）
 
-2. 若 `.gitignore` 不存在，先用 Write 创建空文件（内容为空字符串）
+2. 用 Read 读取现有 `.gitignore` 内容，将所有行存入集合 `existing_lines`
 
-3. 用 Read 读取现有 `.gitignore` 内容，将所有行存入集合 `existing_lines`
+3. **根据项目类型确定待追加规则：**
 
-4. 逐行处理 `gitignore-rules.md` 的每一行：
+   **若类型为 `general`：**
+   仅追加以下规则（不读取 references/gitignore-rules.md）：
+
+   ```
+   # labmate rules
+   .pipeline-state.json
+   .labmate-hook-state.json
+   ```
+
+   **若类型为 `research`：**
+   用 Read 读取 `<plugin_root>/references/gitignore-rules.md`，按以下逻辑处理全部行。
+
+4. 逐行处理待追加规则的每一行：
    - **空行**：追加空行（用于格式间隔）
    - **注释行**（以 `#` 开头）：**始终追加**（作为 section 标记）
    - **规则行**（其他）：
@@ -247,28 +279,16 @@ user-invocable: false
 ```
 === /init-project 完成 ===
 
+项目类型：{type}
+
 已创建：
-  + exp/summary.md
-  + docs/papers/landscape.md
-  + docs/specs/.gitkeep
-  + docs/weekly/.gitkeep
-  + docs/archive/.gitkeep
-  + slides/.gitkeep
-  + scripts/launch_exp.py
-  + scripts/monitor_exp.sh
-  + scripts/download_results.sh
-  + viewer/app.py
-  + viewer/static/index.html
-  + .pipeline-state.json
-  + CLAUDE.md（新建）
+  （根据实际操作列出已创建的文件/目录）
 
 已跳过（已存在）：
-  ~ exp/（目录已存在）
-  ~ docs/papers/landscape.md（文件已存在）
+  （根据实际操作列出已跳过的文件/目录）
 
 已更新：
-  ~ CLAUDE.md（追加 2 个缺失 section）
-  ~ .gitignore（追加 8 条规则）
+  （根据实际操作列出已更新的文件）
 
 === 建议后续步骤 ===
 
@@ -276,10 +296,12 @@ user-invocable: false
    git diff
 
 2. 确认无误后提交：
-   git add -A && git commit -m "chore: init research project skeleton"
+   git add -A && git commit -m "chore: init project skeleton"
 
-3. 开始第一个实验：
-   /new-experiment
+3. （若 type=research）开始第一个实验：
+   /labmate:new-experiment
+   （若 type=general）刷新项目知识：
+   /update-project-skill
 ```
 
 根据实际操作结果填写"已创建"、"已跳过"、"已更新"列表。

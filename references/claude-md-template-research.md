@@ -9,6 +9,8 @@
 | /labmate:new-experiment | Scaffold new experiment |
 | /labmate:analyze-experiment | Analyze results |
 | /labmate:update-project-skill | Refresh project knowledge |
+| /labmate:commit-changelog | Commit with CHANGELOG |
+| /labmate:update-knowhow | Archive environment knowledge |
 | python scripts/launch_exp.py --exp <id> | Launch experiment |
 
 ## Session startup
@@ -37,12 +39,10 @@
 | Agent | Model | Purpose |
 |-------|-------|---------|
 | @project-advisor | opus | Experiment history, findings, codebase navigation |
-| @cc-advisor | sonnet | Claude Code workflow best practices |
-| @domain-expert | opus | Reads papers, interprets experiment results |
+| @domain-expert | opus | Papers, domain knowledge, design advice |
 | @exp-manager | sonnet | Monitors experiments, diagnoses failures |
 | @slides-maker | sonnet | Generates HTML slides from analysis |
 | @viz-frontend | sonnet | Builds analysis dashboards |
-| @template-presenter | sonnet | Project overview and onboarding |
 
 ## Skills
 
@@ -53,9 +53,10 @@ All plugin skills use the `labmate:` prefix.
 | /labmate:new-experiment | Starting a new experiment |
 | /labmate:analyze-experiment | After experiment completes |
 | /labmate:update-project-skill | After major findings or when stale |
-| /labmate:present-template | Generate overview slides |
-| /labmate:weekly-progress | Summarize week's progress |
 | /labmate:commit-changelog | Commit with CHANGELOG |
+| /labmate:update-knowhow | Archive environment knowledge |
+| /labmate:visualize | Results dashboard or project overview |
+| /labmate:monitor | Check experiment status |
 
 ## Workflow
 

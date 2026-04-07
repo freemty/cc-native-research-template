@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### 新增
+- init-project: 支持 general/research 项目类型选择（默认 general）
+- references/claude-md-template-general.md: 轻量 CLAUDE.md 模板（knowhow + project-skill + changelog）
+
+### 变更
+- init-project: Step 3 目录创建按类型分流，general 跳过 exp/scripts/viewer/slides/papers
+- init-project: .pipeline-state.json 新增 `type` 字段
+- references/claude-md-template.md → claude-md-template-research.md（改名）
+- research 模板: 删除废弃 agent（@cc-advisor, @template-presenter）和 skill（present-template, weekly-progress）
+- research 模板: 补充 commit-changelog, update-knowhow, visualize, monitor 到 Quick commands 和 Skills 表
+
 ## v0.7.1 (2026-04-02)
 
 ### 新增
