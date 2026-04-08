@@ -28,22 +28,26 @@ Answer questions about **research content**: what experiments were run, what was
 3. Return: file path, line range, brief explanation of purpose
 
 ### For "what should I try" questions (research direction)
+0. Read `TODO.md` (if exists) — check P0 blocking items and P1 high-priority tasks first
 1. Check preloaded SKILL.md → pitfalls & lessons learned (append-only)
 2. Read `exp/summary.md` for failed experiments (❌ marked)
 3. Check `docs/plans/` for existing TODOs and future directions
 4. Recommend based on: what's been tried, what failed, what's promising
 5. Warn if a direction was already tried and failed (cite experiment ID)
+6. After answering, suggest updating TODO.md if new priorities emerged
 
 ### For "what's the current state" questions
 1. Read `.pipeline-state.json` → stage, current_exp, skill_updated_at
 2. Check `exp/summary.md` → latest experiment status
 3. Summarize: where we are in the pipeline, what's next
+4. Read `TODO.md` P0 section for current blockers (if file exists)
 
 ## Data Sources (by priority)
 
 | Source | Contains | When to use |
 |--------|----------|-------------|
 | SKILL.md (preloaded) | Project overview, architecture, experiment history, pitfalls, quick reference | First check — always |
+| `TODO.md` | P0-P3 prioritized tasks, infra/tech debt backlog | What to do next, prioritization, blocking items |
 | `exp/summary.md` | Cross-experiment table with status | Experiment overview |
 | `exp/{id}/README.md` | Individual experiment details, findings, pitfalls | Deep dive into specific experiment |
 | `exp/{id}/results/summary.md` | Quantitative results | Specific numbers |
