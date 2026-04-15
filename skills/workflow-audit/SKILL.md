@@ -37,7 +37,7 @@ Find recent session `.jsonl` files for this project:
 
 ```bash
 PROJECT_PATH=$(pwd)
-ENCODED=$(echo "$PROJECT_PATH" | sed 's|/|-|g')
+ENCODED=$(echo "$PROJECT_PATH" | sed 's|[^A-Za-z0-9]|-|g')
 SESSION_DIR="$HOME/.claude/projects/${ENCODED}"
 
 # List .jsonl files modified in last 7 days, max 10, newest first
@@ -88,7 +88,7 @@ cat .pipeline-state.json 2>/dev/null || echo "(no pipeline state)"
 ls docs/knowhow/*/*.md 2>/dev/null || echo "(no knowhow)"
 
 # Project memory
-cat ~/.claude/projects/$(pwd | sed 's|/|-|g')/memory/MEMORY.md 2>/dev/null | head -50
+cat ~/.claude/projects/$(pwd | sed 's|[^A-Za-z0-9]|-|g')/memory/MEMORY.md 2>/dev/null | head -50
 
 # Past audit reports
 ls docs/workflow-audits/*.md 2>/dev/null || echo "(no previous audits)"

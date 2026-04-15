@@ -55,7 +55,7 @@ if [ -n "$HAS_PROMPTS" ] || [ -n "$HAS_SKILLS" ]; then
 fi
 
 # Workflow audit nudge — suggest /workflow-audit after productive sessions
-ENCODED_PATH=$(pwd | sed 's|/|-|g')
+ENCODED_PATH=$(pwd | sed 's|[^A-Za-z0-9]|-|g')
 SESSION_DIR="$HOME/.claude/projects/${ENCODED_PATH}"
 CURRENT_SESSION=$(ls -t "$SESSION_DIR"/*.jsonl 2>/dev/null | head -1)
 if [ -n "$CURRENT_SESSION" ]; then
