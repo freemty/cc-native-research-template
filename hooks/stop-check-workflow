@@ -53,3 +53,23 @@ if [ -n "$HAS_PROMPTS" ] || [ -n "$HAS_SKILLS" ]; then
     echo "Warning: prompts/ or .claude/skills/ changed without CHANGELOG entry."
   fi
 fi
+
+# Workflow audit nudge — suggest /workflow-audit after productive sessions
+ENCODED_PATH=$(pwd | sed 's|/|-|g')
+SESSION_DIR="$HOME/.claude/projects/${ENCODED_PATH}"
+CURRENT_SESSION=$(ls -t "$SESSION_DIR"/*.jsonl 2>/dev/null | head -1)
+if [ -n "$CURRENT_SESSION" ]; then
+  SESSION_START=$(stat -f%m "$CURRENT_SESSION" 2>/dev/null || stat -c%Y "$CURRENT_SESSION" 2>/dev/null || echo "0")
+  NOW=$(date +%s)
+  SESSION_AGE_HOURS=$(( (NOW - SESSION_START) / 3600 ))
+  RECENT_COMMITS=$(git log --oneline --since="${SESSION_AGE_HOURS} hours ago" 2>/dev/null | wc -l | tr -d ' ')
+
+  if [ "$SESSION_AGE_HOURS" -ge 2 ] && [ "$RECENT_COMMITS" -ge 10 ]; then
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    source "${SCRIPT_DIR}/hook-utils"
+    if [ "$(should_remind 'workflow_audit' 168)" = "yes" ]; then
+      echo "Productive session (${SESSION_AGE_HOURS}h, ${RECENT_COMMITS} commits). Consider running /workflow-audit to find automation opportunities."
+      mark_reminded "workflow_audit"
+    fi
+  fi
+fi
