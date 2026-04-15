@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.8.0 (2026-04-15)
+
+### 新增
+- /workflow-audit skill: 跨 session 工作流审计 meta-skill，分析 session transcript + git history，发现可自动化的重复模式
+- @workflow-auditor agent (opus): 读取 `.jsonl` session 文件，5 类模式分类（Repetitive Sequence / Error-Prone / Missing Feedback / Underused Asset / Manual Compilation），生成 P0/P1/P2 优先级报告
+- workflow-audit 报告持久化到 `docs/workflow-audits/YYYY-MM-DD.md`，支持趋势对比
+- 降级模式: 非 labmate 项目也可使用 /workflow-audit（仅 git + sessions + .claude/ 数据源）
+- Stop hook 增加审计提醒: session > 2h 且 commits > 10 时建议 /workflow-audit（7 天冷却）
+- "implement N" 交互: 用户可直接从审计报告中选择自动化项目，agent 自动创建 hook/agent/skill
+
+### 修复
+- Session 目录路径编码: `sed 's|/|-|g'` 改为 `sed 's|[^A-Za-z0-9]|-|g'`（匹配 Claude Code 实际编码规则）
+
+### 变更
+- Plugin 组件数更新: 5 → 6 agents, 10 → 11 skills
+- CLAUDE.md: 新增 workflow-audit 条目 + Knowhow section
+
 ## Unreleased
 
 ### 新增

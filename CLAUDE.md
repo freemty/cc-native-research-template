@@ -15,13 +15,14 @@
 | `/visualize` | Build results dashboard for experiment |
 | `/monitor` | Check experiment status via exp-manager |
 | `/update-knowhow` | Archive environment knowledge to docs/knowhow/ |
+| `/workflow-audit` | Audit workflow patterns, suggest + implement automation |
 
 ## Plugin architecture
 
 | Component | Location | Auto-loaded |
 |-----------|----------|-------------|
-| Agents (5) | agents/ | Yes (plugin.json) |
-| Skills (10) | skills/ | Yes (plugin.json) |
+| Agents (6) | agents/ | Yes (plugin.json) |
+| Skills (11) | skills/ | Yes (plugin.json) |
 | Hooks (9) | hooks/ | Yes (hooks.json) |
 | References | references/ | No (used by init-project) |
 
@@ -34,6 +35,7 @@
 | exp-manager | sonnet | Monitors experiments, diagnoses failures |
 | slides-maker | sonnet | Generates HTML slides — analysis, presentations, project overview |
 | viz-frontend | sonnet | Builds analysis dashboards |
+| workflow-auditor | opus | Audits workflow patterns, generates automation recommendations |
 
 ## Skills
 
@@ -49,6 +51,7 @@
 | visualize | Results dashboard, comparison, or project overview |
 | monitor | Check experiment status |
 | update-knowhow | Archive env knowledge (infra, toolchain, debug, runbooks) |
+| workflow-audit | Audit workflow patterns, suggest + implement project-specific automation |
 
 ## How to test
 
@@ -70,6 +73,12 @@
 2. **Smoke test the full pipeline before multi-machine deploy** — Before deploying N jobs x M servers, run the complete end-to-end flow on 1 machine first. Single-machine success does not guarantee distributed success (SSH, quoting, filesystem, process management all introduce new failure modes).
 3. **Experiments must have built-in resume** — Large-scale experiments will always partially fail (API rate limits, network errors, disk issues, process crashes). The framework must support checking completion rate and re-running only failed items.
 
+## Knowhow
+- `docs/knowhow/infrastructure/` — Servers, networking, disk, GPU issues
+- `docs/knowhow/toolchain/` — CLI tools, docker, conda/pip, framework tips
+- `docs/knowhow/debug-solutions/` — Error investigation paths and fixes
+- `docs/knowhow/runbooks/` — Step-by-step operational procedures
+
 ## Specs
 
 - `docs/specs/2026-03-18-inject-template-design.md` — plugin architecture
@@ -77,3 +86,4 @@
 - `docs/specs/2026-03-20-literature-skills-design.md` — /read-paper + /survey-literature design
 - `docs/specs/2026-03-20-convenience-skills-design.md` — /visualize + /monitor + /ask-project design
 - `docs/specs/2026-03-30-update-knowhow-design.md` — /update-knowhow environment knowledge archival
+- `docs/specs/2026-04-15-workflow-audit-design.md` — /workflow-audit meta-skill for harness evolution
