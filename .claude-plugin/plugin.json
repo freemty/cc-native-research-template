@@ -15,8 +15,7 @@
     "./agents/domain-expert.md",
     "./agents/exp-manager.md",
     "./agents/slides-maker.md",
-    "./agents/viz-frontend.md",
-    "./agents/workflow-auditor.md"
+    "./agents/viz-frontend.md"
   ],
   "skills": ["./skills/"]
 }

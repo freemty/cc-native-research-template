@@ -20,10 +20,14 @@
 ## Unreleased
 
 ### 新增
+- /todo skill: 轻量级任务追踪（add/done/list/clean），存储于 docs/TODO.md，首次创建自动索引到 CLAUDE.md
+- /update-docs skill: 面向人的结构化文档创建与更新（design/guide/readme/changelog/custom），自动维护 CLAUDE.md 索引
 - init-project: 支持 general/research 项目类型选择（默认 general）
 - references/claude-md-template-general.md: 轻量 CLAUDE.md 模板（knowhow + project-skill + changelog）
 
 ### 变更
+- 删除 /workflow-audit skill + @workflow-auditor agent + stop-check-workflow hook（功能已被全局 meta-audit skill 覆盖）
+- Plugin 组件数: 6 → 5 agents, 11 → 12 skills, 9 → 8 hooks
 - init-project: Step 3 目录创建按类型分流，general 跳过 exp/scripts/viewer/slides/papers
 - init-project: .pipeline-state.json 新增 `type` 字段
 - references/claude-md-template.md → claude-md-template-research.md（改名）

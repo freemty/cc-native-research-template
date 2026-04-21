@@ -15,15 +15,16 @@
 | `/visualize` | Build results dashboard for experiment |
 | `/monitor` | Check experiment status via exp-manager |
 | `/update-knowhow` | Archive environment knowledge to docs/knowhow/ |
-| `/workflow-audit` | Audit workflow patterns, suggest + implement automation |
+| `/todo` | Lightweight task tracking with auto-index |
+| `/update-docs` | Create/update human-facing docs with auto-index |
 
 ## Plugin architecture
 
 | Component | Location | Auto-loaded |
 |-----------|----------|-------------|
-| Agents (6) | agents/ | Yes (plugin.json) |
-| Skills (11) | skills/ | Yes (plugin.json) |
-| Hooks (9) | hooks/ | Yes (hooks.json) |
+| Agents (5) | agents/ | Yes (plugin.json) |
+| Skills (12) | skills/ | Yes (plugin.json) |
+| Hooks (8) | hooks/ | Yes (hooks.json) |
 | References | references/ | No (used by init-project) |
 
 ## Agents
@@ -35,7 +36,6 @@
 | exp-manager | sonnet | Monitors experiments, diagnoses failures |
 | slides-maker | sonnet | Generates HTML slides — analysis, presentations, project overview |
 | viz-frontend | sonnet | Builds analysis dashboards |
-| workflow-auditor | opus | Audits workflow patterns, generates automation recommendations |
 
 ## Skills
 
@@ -51,7 +51,8 @@
 | visualize | Results dashboard, comparison, or project overview |
 | monitor | Check experiment status |
 | update-knowhow | Archive env knowledge (infra, toolchain, debug, runbooks) |
-| workflow-audit | Audit workflow patterns, suggest + implement project-specific automation |
+| todo | Lightweight task tracking — add/done/list/clean |
+| update-docs | Create/update human-facing structured docs (design, guide, README) |
 
 ## How to test
 
@@ -86,4 +87,4 @@
 - `docs/specs/2026-03-20-literature-skills-design.md` — /read-paper + /survey-literature design
 - `docs/specs/2026-03-20-convenience-skills-design.md` — /visualize + /monitor + /ask-project design
 - `docs/specs/2026-03-30-update-knowhow-design.md` — /update-knowhow environment knowledge archival
-- `docs/specs/2026-04-15-workflow-audit-design.md` — /workflow-audit meta-skill for harness evolution
+- `docs/specs/2026-04-21-todo-and-update-docs-design.md` — /todo + /update-docs 带自动索引的文档维护
