@@ -16,8 +16,8 @@ if [ "$BRANCH" != "dev" ]; then
   exit 1
 fi
 
-if [ -n "$(git status --porcelain)" ]; then
-  echo "ERROR: working tree not clean, commit first"
+if [ -n "$(git diff --name-only HEAD)" ] || [ -n "$(git diff --cached --name-only)" ]; then
+  echo "ERROR: uncommitted changes, commit first"
   exit 1
 fi
 
@@ -49,11 +49,38 @@ p.write_text(json.dumps(data, indent=2) + '\n')
 
 cd "$MARKETPLACE_DIR"
 git add .claude-plugin/marketplace.json
-git commit -m "chore: bump labmate version to v${VERSION}"
-git push origin main
+if git diff --cached --quiet; then
+  echo "  marketplace.json already at v${VERSION}, skipping"
+else
+  git commit -m "chore: bump labmate version to v${VERSION}"
+  git push origin main
+fi
 
-# 5. Done
-echo "[4/4] Done!"
+# 5. Fix installed_plugins.json — update all labmate entries to new version
+echo "[4/4] Fixing installed_plugins.json..."
+INSTALLED="$HOME/.claude/plugins/installed_plugins.json"
+CACHE_PATH="$HOME/.claude/plugins/cache/labmate-marketplace/labmate/${VERSION}"
+if [ -f "$INSTALLED" ]; then
+  python3 -c "
+import json, pathlib
+p = pathlib.Path('$INSTALLED')
+data = json.loads(p.read_text())
+entries = data.get('plugins', {}).get('labmate@labmate-marketplace', [])
+changed = False
+for e in entries:
+    if e.get('version') != '$VERSION':
+        e['version'] = '$VERSION'
+        e['installPath'] = '$CACHE_PATH'
+        changed = True
+if changed:
+    p.write_text(json.dumps(data, indent=2) + '\n')
+    print(f'  Updated {len(entries)} entries to v$VERSION')
+else:
+    print('  All entries already at v$VERSION')
+"
+fi
+
+# 6. Done
 echo ""
 echo "  labmate v${VERSION} released."
-echo "  Run '/plugin update' + '/reload-plugins' to verify."
+echo "  Run '/reload-plugins' in a new session to verify."

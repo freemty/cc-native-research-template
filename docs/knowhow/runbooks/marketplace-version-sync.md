@@ -34,6 +34,15 @@ git push
 # 4. 验证: /plugin update → /reload-plugins → 确认 skill 数量
 ```
 
+## Gotcha: installed_plugins.json
+
+`/plugin update` 只更新 user-scope 记录，不碰 project-scope 的。如果某个项目曾以 project-scope 安装过 labmate，`installed_plugins.json` 里会残留旧版 installPath，plugin loader 优先用 project-scope → 加载旧 cache。
+
+`scripts/release.sh` 已包含自动修正步骤。如果手动发版，检查：
+```bash
+grep -A5 "labmate@labmate-marketplace" ~/.claude/plugins/installed_plugins.json
+```
+
 ## Notes
 - Date: 2026-04-08, updated 2026-04-21
 - Marketplace repo: `freemty/labmate-marketplace`
