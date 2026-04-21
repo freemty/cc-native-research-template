@@ -1,6 +1,6 @@
 # LabMate
 
-![version](https://img.shields.io/badge/version-0.9.0-blue)
+![version](https://img.shields.io/badge/version-0.9.1-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 <!-- TODO: 30s demo GIF — record with VHS or asciinema -->
 
@@ -156,7 +156,7 @@ mkdir -p .claude/agents
   title   = {LabMate: Research Harness for Claude Code},
   author  = {freemty},
   year    = {2026},
-  version = {0.5.0},
+  version = {0.9.1},
   url     = {https://github.com/freemty/labmate}
 }
 ```
