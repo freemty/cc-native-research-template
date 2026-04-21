@@ -16,8 +16,8 @@ if [ "$BRANCH" != "dev" ]; then
   exit 1
 fi
 
-if [ -n "$(git status --porcelain)" ]; then
-  echo "ERROR: working tree not clean, commit first"
+if [ -n "$(git diff --name-only HEAD)" ] || [ -n "$(git diff --cached --name-only)" ]; then
+  echo "ERROR: uncommitted changes, commit first"
   exit 1
 fi
 
@@ -49,8 +49,12 @@ p.write_text(json.dumps(data, indent=2) + '\n')
 
 cd "$MARKETPLACE_DIR"
 git add .claude-plugin/marketplace.json
-git commit -m "chore: bump labmate version to v${VERSION}"
-git push origin main
+if git diff --cached --quiet; then
+  echo "  marketplace.json already at v${VERSION}, skipping"
+else
+  git commit -m "chore: bump labmate version to v${VERSION}"
+  git push origin main
+fi
 
 # 5. Fix installed_plugins.json — update all labmate entries to new version
 echo "[4/4] Fixing installed_plugins.json..."
