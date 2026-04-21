@@ -1,0 +1,46 @@
+name: Sync Marketplace
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.claude-plugin/plugin.json'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Update marketplace
+        uses: actions/checkout@v4
+        with:
+          repository: freemty/labmate-marketplace
+          token: ${{ secrets.MARKETPLACE_PAT }}
+          path: marketplace
+
+      - name: Sync version
+        run: |
+          python3 -c "
+          import json, pathlib
+          p = pathlib.Path('marketplace/.claude-plugin/marketplace.json')
+          data = json.loads(p.read_text())
+          data['plugins'][0]['version'] = '${{ steps.version.outputs.version }}'
+          p.write_text(json.dumps(data, indent=2) + '\n')
+          "
+
+      - name: Commit and push
+        working-directory: marketplace
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .claude-plugin/marketplace.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "chore: bump labmate version to v${{ steps.version.outputs.version }}"
+          git push
