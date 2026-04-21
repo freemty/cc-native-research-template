@@ -1,6 +1,9 @@
 ---
 name: commit-changelog
-description: "Use when creating git commits, updating CHANGELOG.md, committing across nested repos, or generating weekly progress summaries."
+description: >
+  Use when creating git commits, updating CHANGELOG.md, committing across
+  nested repos, or generating weekly progress summaries. Triggers on "commit",
+  "提交", "changelog", "weekly summary", "周报", "write commit message".
 disable-model-invocation: true
 ---
 
@@ -78,7 +81,7 @@ When invoked as `/commit-changelog --weekly` or when user asks for a weekly summ
 
 2. **Gather data** from real files (never fabricate):
    a. **CHANGELOG.md** — entries since last weekly (or all if first)
-   b. **git log** — `git log --oneline --since="last monday"` for commit history
+   b. **git log** — `git log --oneline --since="7 days ago"` for commit history
    c. **exp/summary.md** — experiment status changes
    d. **exp/*/README.md** — any new findings sections populated
    e. **.pipeline-state.json** — current stage and experiment

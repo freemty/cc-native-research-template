@@ -1,6 +1,9 @@
 ---
 name: update-project-skill
-description: "Use when project skill is stale (>24h), before context compacts, after major findings, or on first run for existing repos — regenerates project-skill/SKILL.md from current codebase."
+description: >
+  Regenerate project-skill/SKILL.md from current codebase. Triggers when project
+  skill is stale (>24h), before context compacts, after major findings, or on
+  first run. Also on "refresh project knowledge", "更新项目知识".
 disable-model-invocation: true
 ---
 
@@ -53,7 +56,7 @@ Use the Agent tool to spawn an Opus subagent. Provide different prompts dependin
 
 **Common output format for both modes:**
 
-> Output: complete SKILL.md content with these sections (5-segment retrospective structure):
+> Output: complete SKILL.md content with these sections:
 > - **Project Overview & Current State** (name, description, motivation, current stage)
 > - **Architecture** (code structure, data flow, key modules)
 > - **System Cognition** (core understanding: what works, what doesn't, validated hypotheses, active assumptions)

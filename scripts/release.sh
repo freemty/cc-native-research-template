@@ -56,10 +56,11 @@ else
   git push origin main
 fi
 
-# 5. Fix installed_plugins.json — update all labmate entries to new version
+# 5. Fix installed_plugins.json — update all labmate entries to new version + correct SHA
 echo "[4/4] Fixing installed_plugins.json..."
 INSTALLED="$HOME/.claude/plugins/installed_plugins.json"
 CACHE_PATH="$HOME/.claude/plugins/cache/labmate-marketplace/labmate/${VERSION}"
+MARKETPLACE_SHA=$(cd "$MARKETPLACE_DIR" && git rev-parse HEAD)
 if [ -f "$INSTALLED" ]; then
   python3 -c "
 import json, pathlib
@@ -68,19 +69,36 @@ data = json.loads(p.read_text())
 entries = data.get('plugins', {}).get('labmate@labmate-marketplace', [])
 changed = False
 for e in entries:
-    if e.get('version') != '$VERSION':
+    needs_update = (
+        e.get('version') != '$VERSION'
+        or e.get('installPath') != '$CACHE_PATH'
+        or e.get('gitCommitSha') != '$MARKETPLACE_SHA'
+    )
+    if needs_update:
         e['version'] = '$VERSION'
         e['installPath'] = '$CACHE_PATH'
+        e['gitCommitSha'] = '$MARKETPLACE_SHA'
         changed = True
 if changed:
     p.write_text(json.dumps(data, indent=2) + '\n')
-    print(f'  Updated {len(entries)} entries to v$VERSION')
+    print(f'  Updated {len(entries)} entries to v$VERSION (sha: $MARKETPLACE_SHA)')
 else:
     print('  All entries already at v$VERSION')
 "
 fi
 
-# 6. Done
+# 6. Clean up stale cache versions
+echo "[5/5] Cleaning stale cache..."
+CACHE_BASE="$HOME/.claude/plugins/cache/labmate-marketplace/labmate"
+for dir in "$CACHE_BASE"/*/; do
+  dir_version=$(basename "$dir")
+  if [ "$dir_version" != "$VERSION" ]; then
+    rm -rf "$dir"
+    echo "  Removed stale cache: $dir_version"
+  fi
+done
+
+# 7. Done
 echo ""
 echo "  labmate v${VERSION} released."
 echo "  Run '/reload-plugins' in a new session to verify."

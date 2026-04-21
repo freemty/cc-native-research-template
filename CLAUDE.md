@@ -80,6 +80,10 @@
 - `docs/knowhow/debug-solutions/` — Error investigation paths and fixes
 - `docs/knowhow/runbooks/` — Step-by-step operational procedures
 
+## Guides
+- `docs/guides/releasing.md` — Developer guide: release script, version bump, marketplace sync
+- `docs/guides/installing.md` — User guide: install, update, verify, troubleshooting
+
 ## Specs
 
 - `docs/specs/2026-03-18-inject-template-design.md` — plugin architecture

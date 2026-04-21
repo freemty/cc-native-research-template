@@ -1,6 +1,9 @@
 ---
 name: init-project
-description: "Use when setting up a new project (general or research) or when .pipeline-state.json is missing."
+description: >
+  Use when setting up a new project (general or research) or when
+  .pipeline-state.json is missing. Triggers on "init project", "初始化项目",
+  "set up labmate", "first time setup", "initialize".
 disable-model-invocation: true
 ---
 
@@ -301,7 +304,7 @@ Cross-experiment flight recorder. One row per experiment.
 3. （若 type=research）开始第一个实验：
    /labmate:new-experiment
    （若 type=general）刷新项目知识：
-   /update-project-skill
+   /labmate:update-project-skill
 ```
 
 根据实际操作结果填写"已创建"、"已跳过"、"已更新"列表。

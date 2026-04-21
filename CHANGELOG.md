@@ -22,12 +22,26 @@
 ### 新增
 - /todo skill: 轻量级任务追踪（add/done/list/clean），存储于 docs/TODO.md，首次创建自动索引到 CLAUDE.md
 - /update-docs skill: 面向人的结构化文档创建与更新（design/guide/readme/changelog/custom），自动维护 CLAUDE.md 索引
+- /update-docs: 无参数时从对话上下文自动推断文档类型，不再询问用户
 - init-project: 支持 general/research 项目类型选择（默认 general）
 - references/claude-md-template-general.md: 轻量 CLAUDE.md 模板（knowhow + project-skill + changelog）
+- scripts/release.sh: 一键发版脚本（merge→main, push, sync marketplace, fix installed_plugins.json, clean cache）
+- .github/workflows/sync-marketplace.yml: main push 自动同步 marketplace.json 版本
+- docs/guides/releasing.md: 开发端发版流程指南
+- docs/guides/installing.md: 用户端安装/更新指南
+
+### 修复
+- new-experiment: analyze.py 不再导入不存在的 exp.lib.analyze_common 模块，改为内联实现
+- commit-changelog: `--since="last monday"` 改为 `--since="7 days ago"`（合法 git 语法）
+- new-experiment: 删除 step 6 对不存在的 prompts/ 目录引用
+- update-project-skill: "5-segment" 标签与实际 9 个 section 不符，已修正
+- init-project/monitor: 统一 skill 命名空间为 `/labmate:` 前缀
+- release.sh: gitCommitSha 现在从 marketplace repo 取（而非源码 repo），修复 plugin loader fallback 到旧版本的问题
 
 ### 变更
 - 删除 /workflow-audit skill + @workflow-auditor agent + stop-check-workflow hook（功能已被全局 meta-audit skill 覆盖）
 - Plugin 组件数: 6 → 5 agents, 11 → 12 skills, 9 → 8 hooks
+- 全部 12 个 skill description 增加双语 trigger phrases，提升触发准确性
 - init-project: Step 3 目录创建按类型分流，general 跳过 exp/scripts/viewer/slides/papers
 - init-project: .pipeline-state.json 新增 `type` 字段
 - references/claude-md-template.md → claude-md-template-research.md（改名）

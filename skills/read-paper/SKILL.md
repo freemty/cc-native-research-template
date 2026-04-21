@@ -1,6 +1,9 @@
 ---
 name: read-paper
-description: "Use when user wants to deeply understand a specific paper — its methodology, assumptions, or implications for their research."
+description: >
+  Deep-dive a single paper — methodology, assumptions, implications. Triggers on
+  "read this paper", "读论文", "explain this PDF", "arxiv.org/abs/", paper URLs,
+  "what does this paper say", "paper deep-dive".
 disable-model-invocation: true
 ---
 
