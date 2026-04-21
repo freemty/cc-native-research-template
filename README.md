@@ -1,6 +1,6 @@
 # LabMate
 
-![version](https://img.shields.io/badge/version-0.5.0-blue)
+![version](https://img.shields.io/badge/version-0.9.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 <!-- TODO: 30s demo GIF — record with VHS or asciinema -->
 
@@ -19,8 +19,9 @@ LabMate fixes both sides. It gives your agent persistent experiment memory and d
 ## Install
 
 ```bash
-# From the Anthropic plugin marketplace
-/plugin install labmate
+# Add marketplace, then install
+/plugin marketplace add freemty/labmate-marketplace
+/plugin install labmate@labmate-marketplace
 ```
 
 Then run `/init-project` in your existing research project. LabMate auto-detects your project and sets up the skeleton. Done.
