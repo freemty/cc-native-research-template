@@ -17,7 +17,7 @@
 - Plugin 组件数更新: 5 → 6 agents, 10 → 11 skills
 - CLAUDE.md: 新增 workflow-audit 条目 + Knowhow section
 
-## Unreleased
+## v0.9.0 (2026-04-21)
 
 ### 新增
 - /todo skill: 轻量级任务追踪（add/done/list/clean），存储于 docs/TODO.md，首次创建自动索引到 CLAUDE.md
