@@ -141,7 +141,7 @@ mkdir -p .claude/agents
 
 ## Under the hood
 
-5 specialized agents, 9 skills, 8 hooks working together. See [CLAUDE.md](CLAUDE.md) for the technical architecture.
+5 specialized agents, 12 skills, 8 hooks working together. See [CLAUDE.md](CLAUDE.md) for the technical architecture.
 
 ## Acknowledgments
 
