@@ -4,7 +4,8 @@ description: >
   Create or update human-facing structured documents (design docs, guides,
   README, changelog) with automatic CLAUDE.md indexing. Use when user says
   "update docs", "更新文档", "写 README", "update design doc", "getting started",
-  or wants to maintain project documentation for humans.
+  or wants to maintain project documentation for humans. Also triggers when
+  conversation context implies documentation should be created or updated.
 disable-model-invocation: true
 ---
 
@@ -15,16 +16,31 @@ Create or update human-facing structured documents with automatic CLAUDE.md inde
 ## Usage
 
 ```
-/update-docs                     — Interactive: ask what to create/update
+/update-docs                     — Auto-detect from conversation context
+/update-docs <description>       — Natural language description of what to document
 /update-docs <path>              — Update existing doc at path
 /update-docs <type> <name>       — Create new doc of given type
 ```
 
 ## Step 1: Determine Intent
 
+### With args
+
 Parse user input to identify:
 - **Target path** — explicit path, or derived from type + name
 - **Operation** — create (new file) or update (existing file)
+- **Natural language** — infer type, path, and content from description
+
+### Without args (context-driven)
+
+Analyze the conversation context to determine what documentation is needed. Look for:
+- Discussions about design decisions → `docs/design/` or `docs/specs/`
+- Step-by-step procedures discussed → `docs/guides/`
+- Feature implementations completed → README update or new guide
+- Version bumps or releases → CHANGELOG update
+- User explicitly asked to "document this" or "write this up"
+
+Produce a one-line summary of what you plan to create/update and proceed immediately. Do NOT ask the user to choose a type.
 
 ### Document Types
 
@@ -35,8 +51,6 @@ Parse user input to identify:
 | readme | `README.md` | Project README |
 | changelog | `CHANGELOG.md` | Version changelog |
 | custom | user-specified | Minimal: title + content |
-
-If no args provided, ask: "What document do you want to create or update? (type: design/guide/readme/changelog/custom)"
 
 ## Step 2: Gather Context
 
@@ -77,7 +91,7 @@ For **creates**: scan the codebase for relevant code to document.
 After writing, ensure CLAUDE.md has an entry for the document.
 
 Rules:
-- `docs/design/*.md` → add to Specs section as `- \`{path}\` — {one-line description}`
+- `docs/specs/*.md` or `docs/design/*.md` → add to Specs section as `- \`{path}\` — {one-line description}`
 - `docs/guides/*.md` → add to a Guides section (create if absent)
 - `README.md`, `CHANGELOG.md` → skip indexing (top-level, already discoverable)
 - Custom paths → add to the most relevant existing section, or create a "Docs" section
@@ -100,6 +114,7 @@ Output:
 
 | Mistake | Correct |
 |---------|---------|
+| Asking user to pick a type when context is clear | Infer from context, state plan, execute |
 | Overwriting user-written content | Only update generated/stale sections |
 | Creating docs/ subdirs without checking | Use `ls` first, create dir if needed |
 | Writing agent-facing knowledge here | That belongs in /update-knowhow |

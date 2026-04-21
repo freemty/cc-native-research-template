@@ -1,6 +1,9 @@
 ---
 name: survey-literature
-description: "Use when user needs a systematic literature survey for a research topic or question."
+description: >
+  Systematic literature survey for a research topic. Triggers on "survey the
+  literature", "文献调研", "find papers about", "what's been done on",
+  "literature review", "related work for".
 disable-model-invocation: true
 ---
 

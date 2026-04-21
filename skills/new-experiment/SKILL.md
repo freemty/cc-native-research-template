@@ -1,6 +1,9 @@
 ---
 name: new-experiment
-description: "Use when starting a new experiment — scaffolds exp/{exp_id}/ directory with README, config, run.py, analyze.py, and results structure."
+description: >
+  Use when starting a new experiment — scaffolds exp/{exp_id}/ directory with
+  README, config, run.py, analyze.py, and results structure. Triggers on
+  "new experiment", "新实验", "scaffold exp", "set up experiment", "create experiment".
 disable-model-invocation: true
 ---
 
@@ -96,17 +99,33 @@ When this skill is invoked:
    **analyze.py:** Skeleton script:
    ```python
    """Analyze results for {exp_id}."""
+   import json
    from pathlib import Path
-   from exp.lib.analyze_common import load_runs_log, compute_summary_stats
+
+   def load_runs_log(text):
+       entries = []
+       for line in text.strip().splitlines():
+           if line.startswith("#") or not line.strip():
+               continue
+           parts = line.split()
+           if len(parts) >= 4:
+               entries.append({"timestamp": parts[0], "label": parts[1], "task_id": parts[2], "result_path": parts[3]})
+       return entries
 
    def main():
        log_path = Path("exp/{exp_id}/results/runs.log")
+       if not log_path.exists():
+           print("No runs.log found — nothing to analyze yet.")
+           return
+
        entries = load_runs_log(log_path.read_text())
-       stats = compute_summary_stats(entries)
 
        summary = f"# {exp_id} Results Summary\n\n"
-       summary += f"Total runs: {stats['total']}\n"
-       for label, count in stats.get('labels', {}).items():
+       summary += f"Total runs: {len(entries)}\n"
+       labels = {}
+       for e in entries:
+           labels[e['label']] = labels.get(e['label'], 0) + 1
+       for label, count in labels.items():
            summary += f"- {label}: {count}\n"
 
        summary_path = Path("exp/{exp_id}/results/summary.md")
@@ -131,4 +150,4 @@ When this skill is invoked:
    - Set `current_exp` to new exp_id
    - Set `stage` to "experiment"
 
-6. **Remind** about prompt version bump if `prompts/` directory has content.
+6. **Print summary** of created files and suggest: "Run `/monitor {exp_id}` after launching your experiment."

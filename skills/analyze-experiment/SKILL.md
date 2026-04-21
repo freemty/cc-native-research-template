@@ -1,6 +1,9 @@
 ---
 name: analyze-experiment
-description: "Use when an experiment has completed and results need analysis, interpretation, or presentation."
+description: >
+  Use when an experiment has completed and results need analysis, interpretation,
+  or presentation. Triggers on "analyze results", "分析实验", "interpret experiment",
+  "what did exp find", "run analysis".
 disable-model-invocation: true
 ---
 

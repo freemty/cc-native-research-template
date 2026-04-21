@@ -1,6 +1,9 @@
 ---
 name: monitor
-description: "Check experiment status and diagnose failures via exp-manager. Use when user wants to check on a running experiment."
+description: >
+  Check experiment status and diagnose failures via exp-manager. Triggers on
+  "check status", "看看实验", "how's the run", "any failures", "is it done",
+  "monitor experiment", "experiment status".
 disable-model-invocation: true
 ---
 
@@ -22,7 +25,7 @@ When this skill is invoked with optional `<exp_id>`:
 
 - Check `exp/{exp_id}/` directory exists
 - Check `exp/{exp_id}/results/runs.log` exists
-- If not → tell user: "Experiment {exp_id} not found. Run `/new-experiment` first."
+- If not → tell user: "Experiment {exp_id} not found. Run `/labmate:new-experiment` first."
 
 ### Step 3: Delegate to @exp-manager
 

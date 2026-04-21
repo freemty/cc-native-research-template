@@ -1,6 +1,9 @@
 ---
 name: visualize
-description: "Build results dashboard, comparison view, or project overview. Use when user wants to visualize experiment results or generate project presentations."
+description: >
+  Build results dashboard, comparison view, or project overview. Triggers on
+  "visualize", "可视化", "show results", "dashboard", "compare experiments",
+  "chart my results", "project overview".
 disable-model-invocation: true
 ---
 
