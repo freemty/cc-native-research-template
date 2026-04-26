@@ -1,0 +1,30 @@
+{
+  "name": "labmate",
+  "version": "0.9.1",
+  "description": "Your AI labmate for the full research lifecycle: reading papers, running experiments, writing reports, and maintaining project knowhow.",
+  "author": {
+    "name": "freemty",
+    "url": "https://github.com/freemty"
+  },
+  "homepage": "https://github.com/freemty/labmate",
+  "repository": "https://github.com/freemty/labmate",
+  "license": "MIT",
+  "keywords": ["research", "experiment", "codex", "agents", "skills", "harness", "ai-research"],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Labmate",
+    "shortDescription": "Research lifecycle skills for papers, experiments, and project knowhow.",
+    "longDescription": "Labmate packages research workflow skills for initializing projects, reading papers, surveying literature, launching experiments, monitoring runs, analyzing results, visualizing outputs, and maintaining project documentation.",
+    "developerName": "freemty",
+    "category": "Research",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/freemty/labmate",
+    "defaultPrompt": [
+      "Initialize this research project.",
+      "Read this paper and extract research value.",
+      "Analyze my latest experiment results."
+    ],
+    "brandColor": "#2563EB"
+  }
+}
