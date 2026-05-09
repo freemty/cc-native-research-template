@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### 新增
+- /update-docs 统一归档: 合并 update-knowhow (Branch A) 和 update-docs (Branch B) 为单一 skill，自动路由，不再询问用户分类
+- post-docs-remind hook: feat/fix/refactor commit 后提醒更新文档（2h 冷却）
+- pre-compact-archive hook: context 压缩前检测对话密度，提醒归档知识
+- post-skill-stale hook: 检测 5+ commits 后 project skill 滞后（4h 冷却）
+
+### 变更
+- /update-knowhow 变为 /update-docs 的轻量 alias
+- 分类判断完全由 agent 自主决定，移除 "If unclear, ask user once"
+
 ## v0.8.0 (2026-04-15)
 
 ### 新增
