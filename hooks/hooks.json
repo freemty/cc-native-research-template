@@ -16,6 +16,10 @@
       {
         "matcher": "",
         "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" pre-compact-remind", "async": false}]
+      },
+      {
+        "matcher": "",
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" pre-compact-archive", "async": false}]
       }
     ],
     "PostToolUse": [
@@ -30,6 +34,14 @@
       {
         "matcher": "Bash",
         "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-knowhow-remind", "async": false}]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-docs-remind", "async": false}]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [{"type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" post-skill-stale", "async": false}]
       },
       {
         "matcher": "Write",

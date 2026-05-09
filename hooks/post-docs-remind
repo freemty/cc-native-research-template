@@ -1,0 +1,64 @@
+#!/bin/bash
+# Hook: PostToolUse(Bash) — remind to update docs after significant commits
+# Detects feature/refactor commits and checks if related docs might be stale.
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/hook-utils"
+
+INPUT=$(cat)
+
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+if [ -z "$COMMAND" ]; then exit 0; fi
+
+# Only trigger on git commit
+if ! echo "$COMMAND" | grep -q "git commit"; then exit 0; fi
+
+# Get commit type
+COMMIT_MSG=$(git log -1 --format="%s" 2>/dev/null)
+if [ -z "$COMMIT_MSG" ]; then exit 0; fi
+
+COMMIT_TYPE=$(echo "$COMMIT_MSG" | sed -E 's/^([a-z]+)[(:].*/\1/')
+
+# Only care about meaningful changes (not docs/chore/test/ci commits)
+case "$COMMIT_TYPE" in
+  feat|fix|refactor|perf) ;;
+  *) exit 0 ;;
+esac
+
+# Frequency control: at most once per 2 hours
+if [ "$(should_remind docs_remind 2)" != "yes" ]; then exit 0; fi
+
+# Check what changed
+CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null)
+if [ -z "$CHANGED" ]; then exit 0; fi
+
+# Skip if docs were already updated in this commit
+if echo "$CHANGED" | grep -qE '^(docs/|README\.md|CLAUDE\.md)'; then exit 0; fi
+
+# Avoid double-prompting with post-commit-changelog: if CHANGELOG exists and wasn't
+# updated, that hook will already fire. We still fire too, but only for docs-level
+# changes (not just "update CHANGELOG"). The two hints serve different purposes.
+
+# Check if changed files have related docs that might be stale
+STALE_SIGNALS=""
+
+# Signal: new files in src/ or lib/ without corresponding guide
+if echo "$CHANGED" | grep -qE '\.(py|ts|js)$'; then
+  STALE_SIGNALS="code changes"
+fi
+
+# Signal: config/API changes
+if echo "$CHANGED" | grep -qiE '(config|api|schema|route|endpoint)'; then
+  STALE_SIGNALS="config/API changes"
+fi
+
+if [ -z "$STALE_SIGNALS" ]; then exit 0; fi
+
+mark_reminded docs_remind
+
+cat << HINT
+<docs-hint>
+刚提交了 ${COMMIT_TYPE} commit（${STALE_SIGNALS}），相关文档可能需要同步更新。
+需要更新吗？说"更新文档"或 /update-docs
+</docs-hint>
+HINT

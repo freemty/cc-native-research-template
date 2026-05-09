@@ -1,0 +1,43 @@
+#!/bin/bash
+# Hook: PostToolUse(Bash) — detect project skill staleness by commit count
+# If 5+ commits since last /update-project-skill, remind.
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/hook-utils"
+
+INPUT=$(cat)
+
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+if [ -z "$COMMAND" ]; then exit 0; fi
+
+# Only trigger on git commit
+if ! echo "$COMMAND" | grep -q "git commit"; then exit 0; fi
+
+# Need pipeline state to know when skill was last updated
+STATE_FILE=".pipeline-state.json"
+if [ ! -f "$STATE_FILE" ]; then exit 0; fi
+
+# Frequency: at most once per 4 hours
+if [ "$(should_remind skill_stale 4)" != "yes" ]; then exit 0; fi
+
+# Get last skill update timestamp
+SKILL_UPDATED_AT=$(python3 -c "import json; print(json.load(open('$STATE_FILE')).get('skill_updated_at', 0))" 2>/dev/null)
+if [ -z "$SKILL_UPDATED_AT" ] || [ "$SKILL_UPDATED_AT" = "0" ]; then
+  exit 0
+fi
+# Validate it's a reasonable unix timestamp (10 digits, > year 2020)
+if ! echo "$SKILL_UPDATED_AT" | grep -qE '^[0-9]{10}$'; then exit 0; fi
+
+# Count commits since that timestamp
+COMMITS_SINCE=$(git log --oneline --since="@${SKILL_UPDATED_AT}" 2>/dev/null | wc -l | tr -d ' ')
+
+if [ "$COMMITS_SINCE" -lt 5 ] 2>/dev/null; then exit 0; fi
+
+mark_reminded skill_stale
+
+cat << HINT
+<skill-stale-hint>
+自上次 /update-project-skill 以来已有 ${COMMITS_SINCE} 个 commit，project skill 可能已滞后。
+建议运行 /update-project-skill 同步项目知识。
+</skill-stale-hint>
+HINT

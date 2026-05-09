@@ -1,0 +1,63 @@
+#!/bin/bash
+# Hook: PreCompact — remind to archive knowledge before context compresses
+# Checks session activity level (tool calls, commits) and suggests /update-docs if significant.
+# Depends on: post-knowhow-remind writes 'knowhow_session_count' to .labmate-hook-state.json
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/hook-utils"
+
+# Guard: need a git repo
+git rev-parse --git-dir >/dev/null 2>&1 || exit 0
+
+# Frequency: at most once per session (use a very short cooldown since PreCompact is rare)
+if [ "$(should_remind session_archive 0.5)" != "yes" ]; then exit 0; fi
+
+# Signal 1: count commits made in this session (last 4 hours as proxy)
+RECENT_COMMITS=$(git log --oneline --since="4 hours ago" --author="$(git config user.name)" 2>/dev/null | wc -l | tr -d ' ')
+
+# Signal 2: check if any errors were resolved (knowhow-worthy)
+# Proxy: .labmate-hook-state.json has knowhow_session_count > 0 (hints were fired)
+KNOWHOW_HINTS=$(python3 -c "
+import json
+try:
+    s = json.load(open('.labmate-hook-state.json'))
+    print(s.get('knowhow_session_count', 0))
+except:
+    print(0)
+" 2>/dev/null || echo "0")
+
+# Signal 3: new files created in this session
+NEW_FILES=$(git diff --cached --name-only --diff-filter=A 2>/dev/null | wc -l | tr -d ' ')
+NEW_FILES_COMMITTED=$(git log --oneline --since="4 hours ago" --diff-filter=A --name-only --author="$(git config user.name)" 2>/dev/null | grep -v "^[a-f0-9]" | wc -l | tr -d ' ')
+TOTAL_NEW=$(( NEW_FILES + NEW_FILES_COMMITTED ))
+
+# Decide if session was "heavy" enough to warrant archival
+HEAVY=0
+if [ "$RECENT_COMMITS" -ge 3 ] 2>/dev/null; then HEAVY=1; fi
+if [ "$KNOWHOW_HINTS" -ge 1 ] 2>/dev/null; then HEAVY=1; fi
+if [ "$TOTAL_NEW" -ge 5 ] 2>/dev/null; then HEAVY=1; fi
+
+if [ "$HEAVY" -eq 0 ]; then exit 0; fi
+
+mark_reminded session_archive
+
+# Build context-aware message
+DETAILS=""
+if [ "$RECENT_COMMITS" -ge 3 ] 2>/dev/null; then
+  DETAILS="${DETAILS}${RECENT_COMMITS} commits"
+fi
+if [ "$KNOWHOW_HINTS" -ge 1 ] 2>/dev/null; then
+  [ -n "$DETAILS" ] && DETAILS="${DETAILS}、"
+  DETAILS="${DETAILS}${KNOWHOW_HINTS} 次环境知识提示"
+fi
+if [ "$TOTAL_NEW" -ge 5 ] 2>/dev/null; then
+  [ -n "$DETAILS" ] && DETAILS="${DETAILS}、"
+  DETAILS="${DETAILS}${TOTAL_NEW} 个新文件"
+fi
+
+cat << HINT
+<archive-hint>
+本轮对话较密集（${DETAILS}），context 即将压缩。
+建议归档有价值的知识：说"记下来"或 /update-docs
+</archive-hint>
+HINT
