@@ -17,6 +17,19 @@ Initialize a project skeleton in the user's existing project. Supports two types
 
 ## 执行流程
 
+### Step 0: Handle --dry-run flag
+
+If the user explicitly passes `--dry-run` (e.g. `/init-project --dry-run`):
+
+1. Set a flag `DRY_RUN=true` for this invocation.
+2. Execute all steps below **without creating or modifying any files**. Instead:
+   - For each file that WOULD be created: output `[DRY RUN] Would create: <path>`
+   - For each file that WOULD be skipped (exists): output `[DRY RUN] Would skip (exists): <path>`
+   - For CLAUDE.md sections that WOULD be appended: output `[DRY RUN] Would append section: <section-name>`
+   - For .gitignore rules that WOULD be added: output `[DRY RUN] Would add rule: <rule>`
+3. At the end, output the full structured summary with `[DRY RUN]` prefix on the header.
+4. Do NOT touch the filesystem for any write operation when `DRY_RUN=true`. Read operations (ls, cat, grep) are still allowed to detect current state.
+
 ### Step 1: 检测现有结构
 
 1. 使用 Bash 运行 `git status --porcelain` 检查 git 仓库状态：
