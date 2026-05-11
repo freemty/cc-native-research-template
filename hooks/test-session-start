@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+# Test script for session-start hook
+# Verifies correct context output for different .pipeline-state.json states
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+HOOK_SCRIPT="${SCRIPT_DIR}/session-start"
+TEST_DIR=$(mktemp -d)
+PASS=0
+FAIL=0
+
+cleanup() {
+    rm -rf "$TEST_DIR"
+}
+trap cleanup EXIT
+
+cd "$TEST_DIR"
+
+assert_contains() {
+    local test_name="$1"
+    local output="$2"
+    local expected="$3"
+    if echo "$output" | grep -q "$expected"; then
+        echo "  PASS: $test_name"
+        PASS=$((PASS + 1))
+    else
+        echo "  FAIL: $test_name — expected to find '$expected'"
+        echo "  Output was: $output"
+        FAIL=$((FAIL + 1))
+    fi
+}
+
+assert_not_contains() {
+    local test_name="$1"
+    local output="$2"
+    local unexpected="$3"
+    if echo "$output" | grep -q "$unexpected"; then
+        echo "  FAIL: $test_name — found unexpected '$unexpected'"
+        echo "  Output was: $output"
+        FAIL=$((FAIL + 1))
+    else
+        echo "  PASS: $test_name"
+        PASS=$((PASS + 1))
+    fi
+}
+
+# Ensure hook-utils is reachable
+cp "${SCRIPT_DIR}/hook-utils" "$TEST_DIR/"
+
+echo "=== Running session-start hook tests ==="
+
+# ============================================================
+# Test 1: No .pipeline-state.json → not-initialized message
+# ============================================================
+echo ""
+echo "[Test 1] No pipeline state"
+output=$(bash "$HOOK_SCRIPT" 2>&1 || true)
+assert_contains "prompts to run /init-project" "$output" "/init-project"
+assert_contains "mentions agents are available" "$output" "@domain-expert"
+
+# ============================================================
+# Test 2: Pipeline state with current_exp and stage
+# ============================================================
+echo ""
+echo "[Test 2] Pipeline state present"
+cat > .pipeline-state.json << 'EOF'
+{"current_exp": "exp-001", "stage": "training"}
+EOF
+output=$(bash "$HOOK_SCRIPT" 2>&1 || true)
+assert_contains "shows current experiment" "$output" "exp-001"
+assert_contains "shows stage" "$output" "training"
+assert_contains "shows workflow" "$output" "/new-experiment"
+
+# ============================================================
+# Test 3: Pipeline state + no papers → paper reminder
+# ============================================================
+echo ""
+echo "[Test 3] No papers — paper reminder"
+# Reset hook state to force reminder
+rm -f .labmate-hook-state.json
+mkdir -p docs/papers
+output=$(bash "$HOOK_SCRIPT" 2>&1 || true)
+assert_contains "reminds about papers" "$output" "papers"
+
+# ============================================================
+# Test 4: Output is valid JSON
+# ============================================================
+echo ""
+echo "[Test 4] Output is valid JSON"
+output=$(bash "$HOOK_SCRIPT" 2>&1 || true)
+if echo "$output" | python3 -c "import json,sys; json.load(sys.stdin)" 2>/dev/null; then
+    echo "  PASS: output is valid JSON"
+    PASS=$((PASS + 1))
+else
+    echo "  FAIL: output is not valid JSON"
+    echo "  Output was: $output"
+    FAIL=$((FAIL + 1))
+fi
+
+# ============================================================
+# Test 5: Null current_exp shows "null" not error
+# ============================================================
+echo ""
+echo "[Test 5] null current_exp"
+cat > .pipeline-state.json << 'EOF'
+{"current_exp": null, "stage": "dev"}
+EOF
+rm -f .labmate-hook-state.json
+output=$(bash "$HOOK_SCRIPT" 2>&1 || true)
+assert_contains "null exp shows as null" "$output" "null"
+
+# ============================================================
+echo ""
+echo "=== Results: $PASS passed, $FAIL failed ==="
+if [ "$FAIL" -gt 0 ]; then
+    exit 1
+fi
+exit 0
