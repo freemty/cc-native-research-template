@@ -14,9 +14,9 @@
 | `/survey-literature` | Systematic literature survey |
 | `/visualize` | Build results dashboard for experiment |
 | `/monitor` | Check experiment status via exp-manager |
-| `/update-knowhow` | Archive environment knowledge to docs/knowhow/ |
+| `/update-knowhow` | Alias → /update-docs (auto-routes to knowhow branch) |
 | `/todo` | Lightweight task tracking with auto-index |
-| `/update-docs` | Create/update human-facing docs with auto-index |
+| `/update-docs` | Unified archival: knowhow (agent) + docs (human), auto-routes |
 
 ## Plugin architecture
 
@@ -24,7 +24,7 @@
 |-----------|----------|-------------|
 | Agents (5) | agents/ | Yes (plugin.json) |
 | Skills (12) | skills/ | Yes (plugin.json) |
-| Hooks (8) | hooks/ | Yes (hooks.json) |
+| Hooks (11) | hooks/ | Yes (hooks.json) |
 | References | references/ | No (used by init-project) |
 
 ## Agents
@@ -50,9 +50,9 @@
 | survey-literature | Systematic literature survey |
 | visualize | Results dashboard, comparison, or project overview |
 | monitor | Check experiment status |
-| update-knowhow | Archive env knowledge (infra, toolchain, debug, runbooks) |
+| update-knowhow | Alias → update-docs (knowhow branch auto-selected) |
 | todo | Lightweight task tracking — add/done/list/clean |
-| update-docs | Create/update human-facing structured docs (design, guide, README) |
+| update-docs | Unified archival: knowhow (Branch A) + docs (Branch B), auto-routes |
 
 ## How to test
 
